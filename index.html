@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Turkey Business Simulator</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="card-header">
+        <div class="header-top">
+          <div class="brand">Turkey Bank</div>
+          <button id="btnSettings" class="icon-btn" aria-label="Ayarlar">⚙️</button>
+        </div>
+        <div class="card-body">
+          <div class="card-chip"></div>
+          <div class="card-row">
+            <div class="card-number" id="cardNumber">5341 1234 **** ****</div>
+          </div>
+          <div class="card-row space-between">
+            <div class="balance">
+              <div class="label">Bakiye</div>
+              <div class="value" id="balanceText">₺0</div>
+            </div>
+            <div class="stats">
+              <div class="stat"><span class="label">Seviye</span> <span class="value" id="levelText">Lv 1</span></div>
+              <div class="stat"><span class="label">₺/sn</span> <span class="value" id="perSecText">0</span></div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="mc-logo">
+              <span class="circle red"></span>
+              <span class="circle orange"></span>
+            </div>
+            <div class="prestige">
+              <span class="label">Prestij</span>
+              <span class="value" id="prestigeText">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <section id="tab-home" class="tab active">
+        <div class="click-area">
+          <button id="clickButton" class="click-btn">Tıkla ₺0,50</button>
+        </div>
+        <div class="level-section">
+          <div class="level-bar">
+            <div id="levelProgress" class="level-fill" style="width: 0%;"></div>
+          </div>
+          <div class="level-info" id="levelInfo">Seviye 1: 0 / 100 tıklama</div>
+        </div>
+        <div class="bonuses">
+          <div class="bonus-card">
+            <div class="bonus-header">
+              <div class="title">10 Dakikada Hediye</div>
+              <div class="subtitle">Günlük max 5</div>
+            </div>
+            <div class="bonus-body">
+              <button id="btnGift" class="primary">Hediye Al</button>
+              <div id="giftCountdown" class="muted">Hazır</div>
+            </div>
+          </div>
+          <div class="bonus-card">
+            <div class="bonus-header">
+              <div class="title">Reklam İzle – 5 Dakika Bonus</div>
+              <div class="subtitle">Başlangıç ×5, her izleme +2 (12 saatte sıfırlanır)</div>
+            </div>
+            <div class="bonus-body">
+              <button id="btnAd" class="secondary">Reklam İzle ×5</button>
+              <div id="adCountdown" class="muted">Pasif</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-companies" class="tab">
+        <div class="section-title">İşletmeler</div>
+        <div id="companiesList" class="card-list"></div>
+        <div class="section-title">Futbol Kulübü</div>
+        <div id="footballCard" class="card-list"></div>
+      </section>
+
+      <section id="tab-invest" class="tab">
+        <div class="section">
+          <div class="section-title">Banka – Vadesiz</div>
+          <div class="row">
+            <div>Vadesiz Bakiye: <strong id="demandBalance">₺0</strong></div>
+          </div>
+          <div class="row gap">
+            <input id="demandAmount" type="number" inputmode="decimal" placeholder="Tutar" />
+            <button id="btnDeposit" class="primary small">Yatır</button>
+            <button id="btnWithdraw" class="secondary small">Çek</button>
+          </div>
+          <div class="muted" id="demandInfo">Günlük faiz işler.</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Vadeli Mevduat</div>
+          <div class="row gap">
+            <input id="tdAmount" type="number" inputmode="decimal" placeholder="Tutar" />
+            <input id="tdDays" type="number" inputmode="numeric" placeholder="Gün (1-30)" />
+            <button id="btnOpenTD" class="primary small">Aç</button>
+          </div>
+          <div class="muted" id="tdInfo">Erken çekimde faiz kazancının %50'si kaybedilir.</div>
+          <div id="tdList" class="card-list"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Kredi Sistemi</div>
+          <div class="row gap">
+            <button id="btnLoanSmall" class="primary small">İhtiyaç Kredisi Al</button>
+            <button id="btnLoanBusiness" class="secondary small">İşletme Kredisi Al</button>
+          </div>
+          <div class="muted">İhtiyaç: küçük, kısa vadeli; İşletme: büyük, uzun vadeli.</div>
+          <div id="loanList" class="card-list"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Döviz / Altın</div>
+          <div id="forexList" class="card-list"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Banka Hisseleri</div>
+          <div id="stockCard" class="card-list"></div>
+        </div>
+      </section>
+
+      <section id="tab-market" class="tab">
+        <div class="section-title">Market</div>
+        <div id="marketList" class="card-list"></div>
+      </section>
+
+      <section id="tab-research" class="tab">
+        <div class="section-title">Ar-Ge Merkezi</div>
+        <div id="researchList" class="card-list"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="home">Ana Menü</button>
+      <button class="nav-btn" data-tab="companies">İşletmeler</button>
+      <button class="nav-btn" data-tab="invest">Yatırımlar</button>
+      <button class="nav-btn" data-tab="market">Market</button>
+      <button class="nav-btn" data-tab="research">Ar-Ge</button>
+    </nav>
+  </div>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="title">Ayarlar</div>
+        <button id="btnCloseSettings" class="icon-btn">✖</button>
+      </div>
+      <div class="modal-body">
+        <div class="row gap">
+          <button id="btnSave" class="primary">Kaydet</button>
+          <button id="btnPrestige" class="secondary">Prestij</button>
+          <button id="btnHardReset" class="danger">Oyunu Sıfırla</button>
+        </div>
+        <div id="prestigeInfo" class="muted"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
