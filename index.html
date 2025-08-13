@@ -864,7 +864,7 @@
       qs('#iAdTitle').textContent = t('AdTitle');
       qs('#adInfo').textContent = t('AdInfo');
       const active = state.ad.activeUntil>now();
-      const mult = active ? (state.ad.base + (state.ad.level-1)*2) : 1;
+      const mult = active ? (state.ad.base + (state.ad.level-1)*2 + (state.market.items||[]).reduce((s,it)=> s + ((it.owned||0) * ((it.effect&&it.effect.adPlus)||0)), 0)) : 1;
       qs('#adBadge').textContent = '×' + mult;
       qs('#adTimer').textContent = active ? (t('AdsActive') + ` • ${mmss(Math.ceil((state.ad.activeUntil-now())/1000))}`) : t('AdsInactive');
     }
@@ -1275,14 +1275,17 @@
     }
 
     function renderNav() {
-      const map = { home:'#screen-home', businesses:'#screen-businesses', investments:'#screen-investments', market:'#screen-market' };
-      Object.entries(map).forEach(([key, sel])=>{
-        const btn = qs('#nav'+key.charAt(0).toUpperCase()+key.slice(1));
-        const screen = qs(sel);
-        const active = state.ui.screen===key;
-        btn.classList.toggle('active', active);
-        screen.classList.toggle('active', active);
+      // Toggle nav buttons by data-screen
+      qsa('nav .nav button').forEach(btn=>{
+        const key = btn.getAttribute('data-screen');
+        btn.classList.toggle('active', state.ui.screen===key);
       });
+      // Toggle screens by id
+      qsa('main .screens').forEach(sc=> sc.classList.remove('active'));
+      const activeScreen = qs('#screen-' + state.ui.screen);
+      if (activeScreen) activeScreen.classList.add('active');
+
+      // Localized labels
       qs('#iNavHome').textContent = t('Home');
       qs('#iNavBiz').textContent = t('Businesses');
       qs('#iNavInv').textContent = t('Investments');
@@ -1329,7 +1332,7 @@
       qs('#btnPrestige').onclick = ()=> doPrestigeReset();
 
       // Bottom nav
-      qsa('nav .nav button').forEach(btn=> btn.onclick = ()=>{ state.ui.screen = btn.getAttribute('data-screen'); renderNav(); saveState(false); });
+      qsa('nav .nav button').forEach(btn=> btn.onclick = ()=>{ state.ui.screen = btn.getAttribute('data-screen'); renderNav(); renderAll(); saveState(false); });
 
       // Biz sub tabs
       qsa('#bizTabs .subtab').forEach(btn=> btn.onclick = ()=>{ qsa('#bizTabs .subtab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); state.ui.bizSub = btn.getAttribute('data-subtab'); renderBusinesses(); saveState(false); });
