@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#0d1b2a">
   <title>Turkey Tycoon</title>
+  <link rel="icon" href="data:,">
   <style>
     :root {
       --bg: #0b1320;
@@ -185,7 +186,7 @@
           <div style="position:relative;">
             <div class="k" id="iPrestigeMoneyLabel">Prestij</div>
             <div class="v" id="prestigePoints">0</div>
-            <div class="mc" style="position:absolute; right:0; bottom:-2px; transform: translateY(100%); display:flex; align-items:center; gap:6px;">
+            <div class="mc" style="position:absolute; left:auto; right:0; bottom:-2px; transform: translateY(100%); display:flex; align-items:center; gap:6px;">
               <span class="c1"></span><span class="c2"></span>
               <span style="font-size:11px; color:#ffd7a8; font-weight:800;">MasterCard</span>
             </div>
@@ -423,6 +424,15 @@
         AdsInactive: "Pasif",
         Daily: "Günlük",
         Complete: "Tamamla",
+        Collect: "Topla",
+        ManagerHire: "Yönetici Al",
+        ManagerActive: "Yönetici Aktif",
+        TransferLbl: "Transfer (+Kalite)",
+        StadiumLbl: "Stadyum ↑",
+        TrainingLbl: "Antrenman ↑",
+        SponsorshipLbl: "Sponsorluk ↑",
+        SellAll: "Hepsini Sat",
+        Portfolio: "Portföy",
       },
       en: {
         TurkeyBank: "Turkey Bank",
@@ -505,6 +515,15 @@
         AdsInactive: "Inactive",
         Daily: "Daily",
         Complete: "Complete",
+        Collect: "Collect",
+        ManagerHire: "Hire Manager",
+        ManagerActive: "Manager Active",
+        TransferLbl: "Transfer (+Quality)",
+        StadiumLbl: "Stadium ↑",
+        TrainingLbl: "Training ↑",
+        SponsorshipLbl: "Sponsorship ↑",
+        SellAll: "Sell All",
+        Portfolio: "Portfolio",
       }
     };
 
@@ -630,7 +649,7 @@
         s.rd = s.rd || defaultState().rd;
         s.tasks = s.tasks || defaultState().tasks;
         return s;
-      } catch(e) { console.error(e); return defaultState(); }
+      } catch(e) { console.error(e); try { toast('Kayıt yüklenemedi, yeni oyun başlatılıyor'); } catch(_) {} return defaultState(); }
     }
 
     function saveState(notify=true) {
@@ -807,11 +826,12 @@
           if (window.admob && window.admob.rewarded) {
             window.admob.rewarded.load({ id: (state.ads && state.ads.admobRewardUnitId) || undefined }).then(()=>{
               return window.admob.rewarded.show();
-            }).then(()=> resolve()).catch(reject);
+            }).then(()=> resolve()).catch(err=>{ toast('Reklam hatası'); resolve(); });
           } else {
-            reject(new Error('AdMob not available'));
+            toast('Reklam servisi kullanılamıyor');
+            resolve();
           }
-        } catch(e) { reject(e); }
+        } catch(e) { toast('Reklam hatası: ' + (e&&e.message?e.message:'bilinmiyor')); resolve(); }
       });
     }
 
@@ -879,8 +899,8 @@
 
     // Prestige
     function prestigeGainPreview() {
-      // Auto prestige: 1 point per 1M total earned, additive, no reset on gain
-      return Math.floor((state.totalEarned || 0) / 1_000_000);
+      const total = Math.max(0, (state.totalEarned || 0));
+      return Math.floor(Math.sqrt(total) / 1_000);
     }
     function updateAutoPrestige() {
       const should = prestigeGainPreview();
@@ -913,7 +933,6 @@
       qs('#statTotal').textContent = formatMoney(state.totalEarned);
       qs('#btnSave').textContent = t('Save');
       qs('#btnReset').textContent = t('ResetGame');
-      qs('#btnPrestige').textContent = t('PrestigeReset');
     }
 
     function renderClicker() {
@@ -1015,9 +1034,9 @@
           <div class="meta"><div>${t('Income')}: <b>${formatMoney(income)}/s</b> • Biriken: <b>${uncol}</b></div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
           <div class="two">
             <button class="btn btn-primary" ${(!can||locked)?'disabled':''} data-bid="${b.id}">${b.level>0?t('Upgrade'):t('Buy')}</button>
-            <button class="btn" data-collect="${b.id}">Topla</button>
+                         <button class="btn" data-collect="${b.id}">${t('Collect')}</button>
           </div>
-          <div class="row space"><div class="hint">${locked?`🔒 Lv${b.unlockLevel}`:''}</div><button class="btn" data-manager="${b.id}">${b.manager?'Yönetici Aktif':'Yönetici Al'}</button></div>
+                      <div class="row space"><div class="hint">${locked?`🔒 Lv${b.unlockLevel}`:''}</div><button class="btn" data-manager="${b.id}">${b.manager?t('ManagerActive'):t('ManagerHire')}</button></div>
         `;
         list.appendChild(it);
       });
@@ -1071,13 +1090,13 @@
           <div class="meta"><div>${t('Income')}: <b>${formatMoney(matchIncome)}/maç</b></div><div>${t('Cost')}: <b>${formatMoney(tm.owned?upCost:buyCost)}</b></div></div>
           <div class="two">
             <button class="btn ${state.balance>=(tm.owned?upCost:buyCost)?'btn-primary':''}" data-team="${tm.id}" data-act="buy">${tm.owned?t('Upgrade'):t('Buy')}</button>
-            <button class="btn" data-team="${tm.id}" data-act="transfer">Transfer (+Kalite)</button>
+                         <button class="btn" data-team="${tm.id}" data-act="transfer">${t('TransferLbl')}</button>
           </div>
-          <div class="three">
-            <button class="btn" data-team="${tm.id}" data-act="stadium">Stadyum ↑</button>
-            <button class="btn" data-team="${tm.id}" data-act="training">Antrenman ↑</button>
-            <button class="btn" data-team="${tm.id}" data-act="sponsor">Sponsorluk ↑</button>
-          </div>
+                      <div class="three">
+              <button class="btn" data-team="${tm.id}" data-act="stadium">${t('StadiumLbl')}</button>
+              <button class="btn" data-team="${tm.id}" data-act="training">${t('TrainingLbl')}</button>
+              <button class="btn" data-team="${tm.id}" data-act="sponsor">${t('SponsorshipLbl')}</button>
+            </div>
           <div class="hint">Kalite: ${tm.quality||1} • Stad: ${tm.stadium||0} • Ant: ${tm.training||0} • Spon: ${tm.sponsor||0}</div>
         `;
         box.appendChild(div);
@@ -1133,7 +1152,7 @@
       const port = document.createElement('div'); port.className='item';
       const totalPL = computePortfolioPL();
       port.innerHTML = `
-        <div class="h">📊 Portföy</div>
+                  <div class="h">📊 ${t('Portfolio')}</div>
         <div class="meta"><div>Toplam P/L: <b>${formatMoney(totalPL)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
         <div class="list" id="portList"></div>
       `;
@@ -1313,7 +1332,7 @@
             <div class="row" style="align-items:flex-end;">
               <button class="btn" data-fx="${sym}" data-act="buy">${t('BuyShort')}</button>
               <button class="btn" data-fx="${sym}" data-act="sell">${t('SellShort')}</button>
-              <button class="btn" data-fx="${sym}" data-act="sellall">Hepsini Sat</button>
+              <button class="btn" data-fx="${sym}" data-act="sellall">${t('SellAll')}</button>
             </div>
           </div>
         `;
@@ -1362,7 +1381,7 @@
           <div class="row" style="align-items:flex-end;">
             <button class="btn" id="btnShareBuy">${t('BuyShort')}</button>
             <button class="btn" id="btnShareSell">${t('SellShort')}</button>
-            <button class="btn" id="btnShareSellAll">Hepsini Sat</button>
+            <button class="btn" id="btnShareSellAll">${t('SellAll')}</button>
           </div>
         </div>
       `;
@@ -1444,6 +1463,13 @@
       qs('#iNavBiz').textContent = t('Businesses');
       qs('#iNavInv').textContent = t('Investments');
       qs('#iNavMarket').textContent = t('Market');
+      
+      // Localize static TR strings in biz/football buttons on re-render
+      qsa('[data-manager]').forEach(btn=>{ const id = btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(b){ btn.textContent = b.manager ? t('ManagerActive') : t('ManagerHire'); }});
+      qsa('[data-team][data-act="transfer"]').forEach(btn=> btn.textContent = t('TransferLbl'));
+      qsa('[data-team][data-act="stadium"]').forEach(btn=> btn.textContent = t('StadiumLbl'));
+      qsa('[data-team][data-act="training"]').forEach(btn=> btn.textContent = t('TrainingLbl'));
+      qsa('[data-team][data-act="sponsor"]').forEach(btn=> btn.textContent = t('SponsorshipLbl'));
     }
 
     function renderSettings() {
@@ -1488,7 +1514,7 @@
       qs('#btnGift').onclick = ()=> { claimGift(); renderHeader(); renderGiftsAds(); saveState(false); };
       qs('#btnAd').onclick = ()=> { showRewardAd().then(()=> { watchAd(); renderGiftsAds(); saveState(false); }).catch(()=>{ watchAd(); renderGiftsAds(); saveState(false); }); };
       qs('#btnSave').onclick = ()=> saveState();
-      qs('#btnReset').onclick = ()=> { if (confirm(t('ResetGame')+'?')) { localStorage.removeItem('tt_save'); state = defaultState(); renderAll(); } };
+      qs('#btnReset').onclick = ()=> { if (confirm(t('ResetGame')+'?')) { try{ localStorage.removeItem('tt_save'); }catch(_){} state = defaultState(); renderAll(); } };
 
 
       // Bottom nav
@@ -1519,10 +1545,8 @@
       const dt = Math.min(1000, nowMs - (state.lastTickAt||nowMs));
       state.lastTickAt = nowMs;
 
-      // Passive income
+      // Passive income: accumulate per-business only (manual collect)
       const ps = perSecondIncome();
-      const add = ps * (dt/1000);
-      if (add>0) addBalance(add);
       accumulateUncollected(dt);
 
       // Systems
@@ -1538,7 +1562,13 @@
 
       requestAnimationFrame(tick);
     }
-
+    
+    // Init timers to avoid undefined
+    toast._t = toast._t || null;
+    tick._markets = tick._markets || 0;
+    tick._prestige = tick._prestige || 0;
+    tick._ui = tick._ui || 0;
+    
     // Offline gains on load
     function applyOfflineGains() {
       const last = state.lastTickAt || now();
