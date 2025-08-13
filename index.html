@@ -524,9 +524,10 @@
         level: 1,
         clicks: 0,
         ad: { base: 5, level: 1, activeUntil: 0, levelResetAt: 0 },
-        gift: { last: 0, claimsToday: 0, dayKey: todayKey() },
-        prestige: { level: 0, points: 0 },
-        businesses: {
+                 gift: { last: 0, claimsToday: 0, dayKey: todayKey() },
+         prestige: { level: 0, points: 0 },
+         ads: { admobAppId: 'ca-app-pub-6858485929245224~1950147897', admobRewardUnitId: '' },
+         businesses: {
           normal: [
             { id:'bakkal', nameTR:'Bakkal', nameEN:'Grocery', level:0, baseIncome:0.5, baseCost:10 },
             { id:'kafe', nameTR:'Kafe', nameEN:'Cafe', level:0, baseIncome:1, baseCost:25 },
@@ -739,6 +740,28 @@
       if (state.ad.level < 1) state.ad.level = 1;
       state.ad.activeUntil = now() + 5*60*1000;
       state.ad.levelResetAt = now() + 12*60*60*1000;
+    }
+
+    // AdMob glue
+    function initAdMob() {
+      try {
+        if (window.admob && window.admob.start) {
+          window.admob.start({ appId: (state.ads && state.ads.admobAppId) || 'ca-app-pub-6858485929245224~1950147897' });
+        }
+      } catch(e) { /* ignore */ }
+    }
+    function showRewardAd() {
+      return new Promise((resolve, reject)=>{
+        try {
+          if (window.admob && window.admob.rewarded) {
+            window.admob.rewarded.load({ id: (state.ads && state.ads.admobRewardUnitId) || undefined }).then(()=>{
+              return window.admob.rewarded.show();
+            }).then(()=> resolve()).catch(reject);
+          } else {
+            reject(new Error('AdMob not available'));
+          }
+        } catch(e) { reject(e); }
+      });
     }
 
     // Football
@@ -1329,7 +1352,7 @@
     function wire() {
       qs('#tapBtn').onclick = ()=> { doClick(); renderHeader(); renderClicker(); saveState(false); };
       qs('#btnGift').onclick = ()=> { claimGift(); renderHeader(); renderGiftsAds(); saveState(false); };
-      qs('#btnAd').onclick = ()=> { watchAd(); renderGiftsAds(); saveState(false); };
+      qs('#btnAd').onclick = ()=> { showRewardAd().then(()=> { watchAd(); renderGiftsAds(); saveState(false); }).catch(()=>{ watchAd(); renderGiftsAds(); saveState(false); }); };
       qs('#btnSave').onclick = ()=> saveState();
       qs('#btnReset').onclick = ()=> { if (confirm(t('ResetGame')+'?')) { localStorage.removeItem('tt_save'); state = defaultState(); renderAll(); } };
       qs('#btnPrestige').onclick = ()=> doPrestigeReset();
@@ -1396,6 +1419,8 @@
       wire();
       applyOfflineGains();
       requestAnimationFrame(tick);
+      // Try to load AdMob if available (Cordova/CAP/Android WebView)
+      initAdMob();
     })();
   </script>
 </body>
