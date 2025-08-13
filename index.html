@@ -135,6 +135,23 @@
     .muted { color: var(--muted); }
     .right { text-align: right; }
     .hidden { display: none !important; }
+
+    /* Start Overlay */
+    .start-overlay { position: fixed; inset: 0; background: linear-gradient(180deg,#0b1320,#121a2a); display: none; z-index: 100; padding: 24px; }
+    .start-overlay.show { display: grid; grid-template-rows: 1fr auto; align-items: center; justify-content: center; }
+    .start-card { max-width: 520px; margin: 0 auto; }
+    .title { font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 10px; }
+    .subtitle { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 16px; }
+
+    /* Biz icons */
+    .biz-row { display:flex; align-items:center; gap:10px; }
+    .biz-icon { width: 28px; height: 28px; display:grid; place-items:center; border-radius:8px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.06); font-size:16px; }
+
+    /* Profile */
+    .profile-header { display:grid; gap:10px; align-items:center; justify-items:center; padding:12px; background: var(--card); border:1px solid rgba(255,255,255,.06); border-radius:12px; }
+    .avatar { width: 84px; height: 84px; border-radius: 999px; background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.12); background-size: cover; background-position: center; }
+    .profile-grid { display:grid; gap:8px; }
+    .portfolio { display:grid; gap:8px; }
   </style>
 </head>
 <body>
@@ -149,7 +166,6 @@
           <span class="badge" id="prestigeBadge">P0</span>
         </div>
         <div class="row">
-          <button class="btn pill btn-ok" id="btnPrestige">Prestij</button>
           <button class="icon-btn" id="btnSettings" aria-label="Ayarlar">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.3l.06.06A1.65 1.65 0 0 0 8.9 3a1.65 1.65 0 0 0 1-1.51V1a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 21 8.9c0 .55.21 1.08.59 1.47.38.39.59.92.59 1.47s-.21 1.08-.59 1.47c-.38.39-.59.92-.59 1.47z"/></svg>
           </button>
@@ -183,10 +199,7 @@
         <div class="stat"><div class="h" id="iStatsTotal">Toplam</div><div class="v" id="statTotal">₺0</div></div>
       </div>
 
-      <div class="row wrap" style="margin-top:8px; gap:8px;">
-        <button class="btn" id="btnSave">Kaydet</button>
-        <button class="btn btn-danger" id="btnReset">Oyunu Sıfırla</button>
-      </div>
+
     </header>
 
     <main>
@@ -234,15 +247,7 @@
         </div>
         <div class="list" id="bizList"></div>
 
-        <div class="card" id="footballCard">
-          <div class="row space">
-            <div style="font-weight:800;">⚽ <span id="iFootball">Futbol Takımı</span></div>
-            <div class="pill">5 dk</div>
-          </div>
-          <div class="divider"></div>
-          <div class="list" id="teamsList"></div>
-          <div class="hint" id="matchTimer">Sonraki maç: 05:00</div>
-        </div>
+        <div class="card" id="footballCard" style="display:none;"></div>
       </section>
 
       <!-- Investments Screen -->
@@ -300,24 +305,39 @@
         </select>
       </div>
       <div class="settings-row">
-        <div><div style="font-weight:700;" id="iDark">Koyu Tema</div><div class="hint" id="iDarkHint">Göz dostu koyu tema</div></div>
-        <label class="row" style="gap:6px;">
-          <input type="checkbox" id="darkToggle">
-          <span id="iDarkToggle">Aktif</span>
-        </label>
+        <div><div style="font-weight:700;" id="iSave">Kaydet</div><div class="hint" id="iSaveHint">İlerlemeni kaydet</div></div>
+        <button class="btn" id="btnSave">Kaydet</button>
       </div>
       <div class="settings-row">
-        <div><div style="font-weight:700;" id="iExport">Dışa Aktar</div><div class="hint" id="iExportHint">Kaydı JSON olarak kopyala</div></div>
-        <button class="btn" id="btnExport">Kopyala</button>
-      </div>
-      <div class="settings-row">
-        <div><div style="font-weight:700;" id="iImport">İçe Aktar</div><div class="hint" id="iImportHint">JSON kaydı yapıştır</div></div>
-        <button class="btn" id="btnImport">Yapıştır</button>
+        <div><div style="font-weight:700;" id="iReset">Oyunu Sıfırla</div><div class="hint" id="iResetHint">Tüm ilerlemeyi sıfırla</div></div>
+        <button class="btn btn-danger" id="btnReset">Sıfırla</button>
       </div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
+
+  <!-- Start Overlay -->
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-card card">
+      <div class="title">Turkey Tycoon</div>
+      <div class="subtitle">Dil seçin ve başlayın</div>
+      <div class="list">
+        <div>
+          <label>Dil / Language</label>
+          <select id="startLang">
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="two">
+          <button class="btn btn-primary" id="btnStartNew">Sıfırdan Başla</button>
+          <button class="btn" id="btnContinue">Devam Et</button>
+        </div>
+        <div class="hint" id="startHint"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ---------- Localization ----------
@@ -828,18 +848,17 @@
 
     // Prestige
     function prestigeGainPreview() {
-      // Simple formula: 1 point per 1M total earned
+      // Auto prestige: 1 point per 1M total earned, additive, no reset on gain
       return Math.floor((state.totalEarned || 0) / 1_000_000);
     }
-    function doPrestigeReset() {
-      if (!confirm(t('ConfirmReset'))) return;
-      const gain = prestigeGainPreview();
-      state = defaultState();
-      state.prestige.points = gain; // keep points
-      state.prestige.level = gain;
-      saveState(false);
-      toast(t('Prestige') + ' +' + gain);
-      renderAll();
+    function updateAutoPrestige() {
+      const should = prestigeGainPreview();
+      if ((state.prestige.points||0) < should) {
+        const diff = should - (state.prestige.points||0);
+        state.prestige.points = should;
+        state.prestige.level = should;
+        toast(t('Prestige') + ' +' + diff);
+      }
     }
 
     // ---------- UI Rendering ----------
@@ -957,7 +976,10 @@
         const locked = (sub==='mega' && state.level < (b.unlockLevel||0));
         const it = document.createElement('div'); it.className = 'item';
         it.innerHTML = `
-          <div class="row space"><div class="h">${name}</div><div class="pill">${t('Owned')}: ${b.level||0}</div></div>
+          <div class="row space">
+            <div class="biz-row"><div class="biz-icon">🏪</div><div class="h">${name}</div></div>
+            <div class="pill">${t('Owned')}: ${b.level||0}</div>
+          </div>
           <div class="meta"><div>${t('Income')}: <b>${formatMoney(income)}/s</b></div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
           <div class="row space">
             <div class="hint">${locked?`🔒 Lv${b.unlockLevel}`:''}</div>
@@ -978,7 +1000,24 @@
         if (spend(cost)) { b.level = (b.level||0)+1; renderAll(); saveState(false); }
       });
 
-      renderFootball();
+      // Football only in Mega tab
+      const footCard = qs('#footballCard');
+      if (state.ui.bizSub==='mega') {
+        footCard.style.display = '';
+        footCard.innerHTML = `
+          <div class="row space">
+            <div style="font-weight:800;">⚽ <span id="iFootball">${t('Football')}</span></div>
+            <div class="pill">5 dk</div>
+          </div>
+          <div class="divider"></div>
+          <div class="list" id="teamsList"></div>
+          <div class="hint" id="matchTimer">${t('NextMatch')}: 05:00</div>
+        `;
+        renderFootball();
+      } else {
+        footCard.style.display = 'none';
+        footCard.innerHTML = '';
+      }
     }
 
     function renderFootball() {
@@ -1323,16 +1362,16 @@
       qs('#btnCloseSettings').textContent = t('Close');
       qs('#iLang').textContent = t('Language');
       qs('#iLangHint').textContent = t('LanguageHint');
-      qs('#iDark').textContent = t('Dark');
-      qs('#iDarkHint').textContent = t('DarkHint');
-      qs('#iDarkToggle').textContent = t('DarkActive');
-      qs('#iExport').textContent = t('Export');
-      qs('#iExportHint').textContent = t('ExportHint');
-      qs('#iImport').textContent = t('Import');
-      qs('#iImportHint').textContent = t('ImportHint');
+      qs('#iSave').textContent = t('Save');
+      qs('#iSaveHint').textContent = t('Save');
+      qs('#iReset').textContent = t('ResetGame');
+      qs('#iResetHint').textContent = t('ResetGame');
+
+      // Prestige preview in header badge
+      const nextPrestige = prestigeGainPreview();
+      qs('#prestigeBadge').textContent = 'P' + (state.prestige.points||0) + ' → ' + nextPrestige;
 
       qs('#langSelect').value = state.lang;
-      qs('#darkToggle').checked = !!state.dark;
       document.documentElement.style.colorScheme = state.dark? 'dark' : 'light';
     }
 
@@ -1355,7 +1394,7 @@
       qs('#btnAd').onclick = ()=> { showRewardAd().then(()=> { watchAd(); renderGiftsAds(); saveState(false); }).catch(()=>{ watchAd(); renderGiftsAds(); saveState(false); }); };
       qs('#btnSave').onclick = ()=> saveState();
       qs('#btnReset').onclick = ()=> { if (confirm(t('ResetGame')+'?')) { localStorage.removeItem('tt_save'); state = defaultState(); renderAll(); } };
-      qs('#btnPrestige').onclick = ()=> doPrestigeReset();
+
 
       // Bottom nav
       qsa('nav .nav button').forEach(btn=> btn.onclick = ()=>{ state.ui.screen = btn.getAttribute('data-screen'); renderNav(); renderAll(); saveState(false); });
@@ -1367,10 +1406,7 @@
       qs('#btnSettings').onclick = ()=> openSettings(true);
       qs('#btnCloseSettings').onclick = ()=> openSettings(false);
       qs('#langSelect').onchange = (e)=> { state.lang = e.target.value; renderAll(); saveState(false); };
-      qs('#darkToggle').onchange = (e)=> { state.dark = !!e.target.checked; renderSettings(); saveState(false); };
 
-      qs('#btnExport').onclick = ()=> { const txt = JSON.stringify(state); navigator.clipboard.writeText(txt).then(()=> toast(t('ExportSuccess'))); };
-      qs('#btnImport').onclick = ()=> { const txt = prompt(t('ImportPrompt'),''); if (!txt) return; try { const s = JSON.parse(txt); localStorage.setItem('tt_save', JSON.stringify(s)); state = loadState(); renderAll(); toast(t('ImportSuccess')); } catch(e){ console.error(e); } };
     }
 
     function openSettings(show) {
@@ -1396,10 +1432,13 @@
       // Systems
       maybePlayMatches();
       accrueBankInterest();
-      if (!tick._markets || nowMs - tick._markets > 3000) { randomizeMarkets(); tick._markets = nowMs; }
+      if (!tick._markets || nowMs - tick._markets > 10000) { randomizeMarkets(); tick._markets = nowMs; }
+
+      // Auto prestige
+      if (!tick._prestige || nowMs - tick._prestige > 2000) { updateAutoPrestige(); tick._prestige = nowMs; }
 
       // UI every 250ms
-      if (!tick._ui || nowMs - tick._ui > 250) { renderHeader(); renderGiftsAds(); renderFootball(); tick._ui = nowMs; }
+      if (!tick._ui || nowMs - tick._ui > 250) { renderHeader(); renderGiftsAds(); if (state.ui.bizSub==='mega') renderFootball(); tick._ui = nowMs; }
 
       requestAnimationFrame(tick);
     }
@@ -1421,7 +1460,31 @@
       requestAnimationFrame(tick);
       // Try to load AdMob if available (Cordova/CAP/Android WebView)
       initAdMob();
+      // Start overlay logic
+      setupStartOverlay();
     })();
+
+    function setupStartOverlay() {
+      const overlay = qs('#startOverlay');
+      const hasSave = !!localStorage.getItem('tt_save');
+      qs('#startLang').value = state.lang;
+      qs('#startLang').onchange = (e)=> { state.lang = e.target.value; renderAll(); saveState(false); };
+      qs('#btnContinue').disabled = !hasSave;
+      qs('#startHint').textContent = hasSave ? '' : 'Kayıt bulunamadı, sıfırdan başlayabilirsiniz';
+      qs('#btnContinue').onclick = ()=> { overlay.classList.remove('show'); };
+      qs('#btnStartNew').onclick = ()=> {
+        if (hasSave) {
+          if (!confirm('Kayıtlı oyun var, sıfırdan başlamak ister misiniz?')) return;
+        }
+        localStorage.removeItem('tt_save');
+        state = defaultState();
+        state.lang = qs('#startLang').value;
+        renderAll();
+        overlay.classList.remove('show');
+      };
+      // Show only first time or when no save
+      if (!hasSave) overlay.classList.add('show');
+    }
   </script>
 </body>
 </html>
