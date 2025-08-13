@@ -50,7 +50,7 @@
       box-shadow: var(--shadow);
     }
 
-    .credit-card { position: relative; overflow: hidden; padding-bottom: 48px; }
+    .credit-card { position: relative; overflow: hidden; }
     .credit-card .bank { font-weight: 800; font-size: 14px; letter-spacing: .3px; opacity: .95; }
     .credit-card .row { display: flex; align-items: center; justify-content: space-between; }
     .credit-card .chip { width: 38px; height: 28px; border-radius: 6px; background: linear-gradient(180deg, #e8d9a5, #b48b09); border: 1px solid rgba(0,0,0,.25); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
@@ -166,11 +166,14 @@
           <div><div class="k" id="iBalanceLabel">Bakiye</div><div class="v" id="balance">₺0</div></div>
           <div><div class="k" id="iLevelLabel">Seviye</div><div class="v" id="level">1</div></div>
           <div><div class="k" id="iPerSecLabel">Saniyelik</div><div class="v" id="perSecond">₺0</div></div>
-          <div><div class="k" id="iPrestigeMoneyLabel">Prestij</div><div class="v" id="prestigePoints">0</div></div>
-        </div>
-        <div class="mc">
-          <span class="c1"></span><span class="c2"></span>
-          <span style="font-size:11px; color:#ffd7a8; font-weight:800;">MasterCard</span>
+          <div style="position:relative;">
+            <div class="k" id="iPrestigeMoneyLabel">Prestij</div>
+            <div class="v" id="prestigePoints">0</div>
+            <div class="mc" style="position:absolute; right:0; bottom:-2px; transform: translateY(100%); display:flex; align-items:center; gap:6px;">
+              <span class="c1"></span><span class="c2"></span>
+              <span style="font-size:11px; color:#ffd7a8; font-weight:800;">MasterCard</span>
+            </div>
+          </div>
         </div>
       </div>
 
