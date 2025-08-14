@@ -387,6 +387,8 @@
         AdTitle: "Reklam İzle – 5 Dakika Bonus",
         AdInfo: "Başlangıç ×5, her izleyişte +2 artar. 12 saatte sıfırlanır.",
         Tasks: "Günlük Görevler",
+        WatchAds10: "10 defa reklam izle",
+        AutoClick12h: "12 saat oto tıklama" ,
         Home: "Ana Menü",
         Businesses: "İşletmeler",
         Investments: "Yatırımlar",
@@ -484,6 +486,8 @@
         AdTitle: "Watch Ad – 5 Minute Bonus",
         AdInfo: "Starts ×5, +2 per watch. Resets in 12h.",
         Tasks: "Daily Tasks",
+        WatchAds10: "Watch 10 ads",
+        AutoClick12h: "12h auto click" ,
         Home: "Home",
         Businesses: "Businesses",
         Investments: "Investments",
@@ -652,11 +656,13 @@
         },
         rd: { clickPct:0, incomePct:0, level:0 },
         profile: { name:'', avatar:'' },
+        autoclick: { until: 0 },
         tasks: {
           daily: [
             { id:'d_click', nameTR:'500 Tıklama', nameEN:'500 Clicks', goal:500, progress:0, reward:1, day:'' },
             { id:'d_invest', nameTR:'1 Yatırım', nameEN:'1 Investment', goal:1, progress:0, reward:1, day:'' },
             { id:'d_market', nameTR:'1 Market Alımı', nameEN:'1 Market Purchase', goal:1, progress:0, reward:1, day:'' },
+            { id:'d_ads10', nameTR:'10 defa reklam izle', nameEN:'Watch 10 ads', goal:10, progress:0, reward:0, day:'' },
           ]
         },
         ui: { screen:'home', bizSub:'normal', invSub:'bank' },
@@ -888,7 +894,7 @@
 
     // Gifts
     function giftReadyInfo() {
-      const dk = todayKey();
+      const dk = todayKey(); // reset at local midnight
       if (state.gift.dayKey !== dk) { state.gift.dayKey = dk; state.gift.claimsToday = 0; }
       const readyAt = (state.gift.last||0) + 10*60*1000;
       const remaining = Math.max(0, readyAt - now());
@@ -907,7 +913,7 @@
 
     // Ads
     function watchAd() {
-      const dk = todayKey();
+      const dk = todayKey(); // reset at local midnight
       if (!state.ad.levelResetAt || now() > state.ad.levelResetAt) {
         state.ad.level = 1; // reset level every 12h
       }
@@ -917,6 +923,11 @@
       state.ad.levelResetAt = now() + 12*60*60*1000;
       // 1 hour +20% business income boost
       state.ad.boostUntil = now() + 60*60*1000;
+      // Ad clicker: +5 minutes auto click per ad
+      const addMin = 5*60*1000;
+      state.autoclick.until = Math.max(state.autoclick.until||0, now()) + addMin;
+      // Ad counter towards daily 10x
+      const adsTask = state.tasks.daily.find(x=>x.id==='d_ads10'); if (adsTask){ ensureDaily(adsTask); adsTask.progress = clamp(adsTask.progress+1, 0, adsTask.goal);}
     }
 
     // AdMob glue
@@ -1171,11 +1182,15 @@
         const id = btn.getAttribute('data-task');
         const task = state.tasks.daily.find(x=>x.id===id);
         if (task && task.progress>=task.goal) {
-          state.prestige.points += task.reward;
-          state.prestige.level = state.prestige.points;
+          if (task.id==='d_ads10') {
+            state.autoclick.until = now() + 12*60*60*1000; // 12h auto click
+            toast(state.lang==='tr' ? '12 saat oto tıklama aktif' : '12h auto click active');
+          } else {
+            state.prestige.points += task.reward;
+            state.prestige.level = state.prestige.points;
+          }
           task.progress = 0;
           task.day = todayKey();
-          toast('+'+task.reward+' ' + t('Prestige'));
           renderAll();
           saveState(false);
         }
@@ -1815,6 +1830,19 @@
       // UI every 250ms
       if (!tick._ui || nowMs - tick._ui > 250) { renderHeader(); renderGiftsAds(); if (state.ui.bizSub==='mega') renderFootball(); tick._ui = nowMs; }
 
+      // Auto clicker: generate clicks while active
+      if (state.autoclick && (state.autoclick.until||0) > nowMs) {
+        const remainMs = state.autoclick.until - nowMs;
+        // clicks per second: use perClickBase to compute money directly
+        const cps = 1; // 1 synthetic click per second baseline
+        const sec = dt/1000;
+        if (cps>0 && sec>0) {
+          const pc = perClickBase(state.level) * clickMultiplier();
+          addBalance(pc * cps * sec);
+          state.clicks += cps * sec;
+        }
+      }
+
       requestAnimationFrame(tick);
     }
     
@@ -1829,7 +1857,18 @@
       const last = state.lastTickAt || now();
       const seconds = clamp(((now()-last)/1000)|0, 0, 8*60*60); // up to 8 hours
       const gain = perSecondIncome() * seconds;
-      if (gain>0) { addBalance(gain); toast('⏱ +' + formatMoney(gain)); }
+      // offline auto clicks
+      let autoGain = 0;
+      if (state.autoclick && (state.autoclick.until||0) > last) {
+        const autoSeconds = Math.min(seconds, Math.max(0, Math.floor((Math.min(state.autoclick.until, now()) - last)/1000)));
+        if (autoSeconds>0) {
+          const pc = perClickBase(state.level) * clickMultiplier();
+          autoGain = pc * autoSeconds; // 1 cps
+          state.clicks += autoSeconds;
+        }
+      }
+      const total = gain + autoGain;
+      if (total>0) { addBalance(total); toast('⏱ +' + formatMoney(total)); }
     }
 
     // ---------- Init ----------
