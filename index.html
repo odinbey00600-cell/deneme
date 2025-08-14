@@ -970,6 +970,21 @@
           data: { labels: [], datasets: [{ label: sym + ' Price', data: [], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.15)', tension: 0.25, pointRadius: 0 }] },
           options: { responsive: true, animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
         });
+        // Seed history if empty so chart isn't blank
+        const arr = fxHistory[sym];
+        if (arr && arr.length === 0) {
+          const p = (state.bank.fx[sym] && state.bank.fx[sym].price) || 0;
+          const t = now();
+          arr.push({ t: t-2000, p });
+          arr.push({ t: t-1000, p });
+          arr.push({ t, p });
+        }
+        // Initial paint
+        const ch = charts[canvasId];
+        const hist = fxHistory[sym] || [];
+        ch.data.labels = hist.map(x=> new Date(x.t).toLocaleTimeString());
+        ch.data.datasets[0].data = hist.map(x=> x.p);
+        ch.update();
       } catch(e) {/* ignore */}
     }
 
@@ -1695,7 +1710,14 @@
       // Systems
       maybePlayMatches();
       accrueBankInterest();
-      if (!tick._markets || nowMs - tick._markets > 10000) { randomizeMarkets(); tick._markets = nowMs; }
+      if (!tick._markets) { // initialize history on first tick
+        pushPriceHistory('USD', state.bank.fx.USD.price);
+        pushPriceHistory('EUR', state.bank.fx.EUR.price);
+        pushPriceHistory('XAU', state.bank.fx.XAU.price);
+        pushShareHistory(state.bank.shares.price);
+        updateMiniCharts();
+        tick._markets = nowMs;
+      } else if (nowMs - tick._markets > 10000) { randomizeMarkets(); tick._markets = nowMs; }
 
       // Auto prestige
       if (!tick._prestige || nowMs - tick._prestige > 2000) { updateAutoPrestige(); tick._prestige = nowMs; }
