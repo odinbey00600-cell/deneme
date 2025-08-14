@@ -1,0 +1,1420 @@
+
+    // ---------- Localization ----------
+    const I18N = {
+      tr: {
+        TurkeyBank: "Turkey Bank",
+        Prestige: "Prestij",
+        Save: "Kaydet",
+        ResetGame: "Oyunu Sıfırla",
+        Balance: "Bakiye",
+        Level: "Seviye",
+        PerSecond: "Saniyelik",
+        PrestigeMoney: "Prestij",
+        StatsIncome: "Kazanç/s",
+        StatsClicks: "Tıklama",
+        StatsTotal: "Toplam",
+        Tap: "Tıkla",
+        GiftTitle: "10 dakikada bir hediye",
+        GiftInfo: "Hediye: Seviye × 100",
+        GiftGet: "Al",
+        AdTitle: "Reklam İzle – 5 Dakika Bonus",
+        AdInfo: "Başlangıç ×5, her izleyişte +2 artar. 12 saatte sıfırlanır.",
+        Tasks: "Günlük Görevler",
+        Home: "Ana Menü",
+        Businesses: "İşletmeler",
+        Investments: "Yatırımlar",
+        Market: "Market",
+        Profile: "Profil",
+        Homes: "Evler",
+        Cars: "Arabalar",
+        Other: "Diğer",
+        Username: "Kullanıcı Adı",
+        SaveProfile: "Profili Kaydet",
+        Settings: "Ayarlar",
+        Close: "Kapat",
+        Language: "Dil / Language",
+        LanguageHint: "Uygulama dilini değiştir",
+        Dark: "Koyu Tema",
+        DarkHint: "Göz dostu koyu tema",
+        DarkActive: "Aktif",
+        Export: "Dışa Aktar",
+        ExportHint: "Kaydı JSON olarak kopyala",
+        Import: "İçe Aktar",
+        ImportHint: "JSON kaydı yapıştır",
+        Normal: "Normal",
+        Special: "Özel",
+        Mega: "Mega",
+        Football: "Futbol Takımı",
+        NextMatch: "Sonraki maç",
+        Bank: "Banka",
+        FX: "Döviz/Altın",
+        Shares: "Hisseler",
+        RnD: "Ar-Ge",
+        Buy: "Satın Al",
+        Upgrade: "Yükselt",
+        Owned: "Seviye",
+        Income: "Gelir",
+        Cost: "Maliyet",
+        Checking: "Vadesiz Hesap",
+        Deposit: "Yatır",
+        Withdraw: "Çek",
+        Amount: "Tutar",
+        DailyInterest: "Günlük faiz",
+        TimeDeposit: "Vadeli Mevduat",
+        Days: "Gün",
+        Start: "Başlat",
+        EarlyWithdraw: "Erken Çek",
+        Penalty: "Ceza",
+        Loans: "Krediler",
+        PersonalLoan: "İhtiyaç Kredisi",
+        BusinessLoan: "İşletme Kredisi",
+        Take: "Al",
+        Repay: "Öde",
+        Price: "Fiyat",
+        Holding: "Lot",
+        BuyShort: "Al",
+        SellShort: "Sat",
+        RnDClick: "Tıklama Bonusu",
+        RnDIncome: "Gelir Bonusu",
+        Research: "Araştır",
+        PrestigeReset: "Prestij Atla",
+        ConfirmReset: "Prestij atlamak tüm ilerlemeyi sıfırlar. Devam edilsin mi?",
+        ExportSuccess: "Kopyalandı!",
+        ImportPrompt: "Kayıt JSON'unu yapıştırın:",
+        ImportSuccess: "İçe aktarıldı!",
+        GiftReady: "Hazır",
+        NotReady: "Hazır değil",
+        AdsActive: "Aktif",
+        AdsInactive: "Pasif",
+        Daily: "Günlük",
+        Complete: "Tamamla",
+        Collect: "Topla",
+        ManagerHire: "Yönetici Al",
+        ManagerActive: "Yönetici Aktif",
+        TransferLbl: "Transfer (+Kalite)",
+        StadiumLbl: "Stadyum ↑",
+        TrainingLbl: "Antrenman ↑",
+        SponsorshipLbl: "Sponsorluk ↑",
+        SellAll: "Hepsini Sat",
+        Portfolio: "Portföy",
+      },
+      en: {
+        TurkeyBank: "Turkey Bank",
+        Prestige: "Prestige",
+        Save: "Save",
+        ResetGame: "Reset Game",
+        Balance: "Balance",
+        Level: "Level",
+        PerSecond: "Per Second",
+        PrestigeMoney: "Prestige",
+        StatsIncome: "Income/s",
+        StatsClicks: "Clicks",
+        StatsTotal: "Total",
+        Tap: "Tap",
+        GiftTitle: "Gift every 10 minutes",
+        GiftInfo: "Gift: Level × 100",
+        GiftGet: "Claim",
+        AdTitle: "Watch Ad – 5 Minute Bonus",
+        AdInfo: "Starts ×5, +2 per watch. Resets in 12h.",
+        Tasks: "Daily Tasks",
+        Home: "Home",
+        Businesses: "Businesses",
+        Investments: "Investments",
+        Market: "Market",
+        Profile: "Profile",
+        Homes: "Homes",
+        Cars: "Cars",
+        Other: "Other",
+        Username: "Username",
+        SaveProfile: "Save Profile",
+        Settings: "Settings",
+        Close: "Close",
+        Language: "Language",
+        LanguageHint: "Change app language",
+        Dark: "Dark Theme",
+        DarkHint: "Eye-friendly dark mode",
+        DarkActive: "Active",
+        Export: "Export",
+        ExportHint: "Copy save as JSON",
+        Import: "Import",
+        ImportHint: "Paste JSON save",
+        Normal: "Normal",
+        Special: "Special",
+        Mega: "Mega",
+        Football: "Football Club",
+        NextMatch: "Next match",
+        Bank: "Bank",
+        FX: "FX/Gold",
+        Shares: "Bank Shares",
+        RnD: "R&D",
+        Buy: "Buy",
+        Upgrade: "Upgrade",
+        Owned: "Level",
+        Income: "Income",
+        Cost: "Cost",
+        Checking: "Checking Account",
+        Deposit: "Deposit",
+        Withdraw: "Withdraw",
+        Amount: "Amount",
+        DailyInterest: "Daily interest",
+        TimeDeposit: "Time Deposit",
+        Days: "Days",
+        Start: "Start",
+        EarlyWithdraw: "Early Withdraw",
+        Penalty: "Penalty",
+        Loans: "Loans",
+        PersonalLoan: "Personal Loan",
+        BusinessLoan: "Business Loan",
+        Take: "Take",
+        Repay: "Repay",
+        Price: "Price",
+        Holding: "Holding",
+        BuyShort: "Buy",
+        SellShort: "Sell",
+        RnDClick: "Click Bonus",
+        RnDIncome: "Income Bonus",
+        Research: "Research",
+        PrestigeReset: "Prestige Reset",
+        ConfirmReset: "Prestige will reset all progress. Continue?",
+        ExportSuccess: "Copied!",
+        ImportPrompt: "Paste your save JSON:",
+        ImportSuccess: "Imported!",
+        GiftReady: "Ready",
+        NotReady: "Not ready",
+        AdsActive: "Active",
+        AdsInactive: "Inactive",
+        Daily: "Daily",
+        Complete: "Complete",
+        Collect: "Collect",
+        ManagerHire: "Hire Manager",
+        ManagerActive: "Manager Active",
+        TransferLbl: "Transfer (+Quality)",
+        StadiumLbl: "Stadium ↑",
+        TrainingLbl: "Training ↑",
+        SponsorshipLbl: "Sponsorship ↑",
+        SellAll: "Sell All",
+        Portfolio: "Portfolio",
+      }
+    };
+
+    function t(key) {
+      const lang = state.lang || 'tr';
+      return (I18N[lang] && I18N[lang][key]) || (I18N.tr && I18N.tr[key]) || key;
+    }
+
+    // ---------- Utilities ----------
+    const nfTRY = new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 2 });
+    const nf = new Intl.NumberFormat('tr-TR');
+
+    function formatMoney(x) { return nfTRY.format(Math.max(0, x)); }
+    function formatShort(x) {
+      const abs = Math.abs(x);
+      if (abs >= 1e12) return (x/1e12).toFixed(2) + 'T';
+      if (abs >= 1e9) return (x/1e9).toFixed(2) + 'B';
+      if (abs >= 1e6) return (x/1e6).toFixed(2) + 'M';
+      if (abs >= 1e3) return (x/1e3).toFixed(2) + 'K';
+      return (Math.round(x*100)/100).toString();
+    }
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+    function now() { return Date.now(); }
+    function todayKey() { const d = new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+    function randomWalk(p, step, min, max) { const n = p * (1 + (Math.random()*2-1)*step); return clamp(n, min, max); }
+
+    // ---------- Game State ----------
+    const VERSION = 1;
+    function defaultState() {
+      return {
+        version: VERSION,
+        lang: (navigator.language||'tr').startsWith('tr') ? 'tr' : 'en',
+        dark: true,
+        cardNumber: generateCardNumber(),
+        balance: 0,
+        totalEarned: 0,
+        level: 1,
+        clicks: 0,
+                 ad: { base: 5, level: 1, activeUntil: 0, levelResetAt: 0, boostUntil: 0 }, 
+                 gift: { last: 0, claimsToday: 0, dayKey: todayKey() },
+         prestige: { level: 0, points: 0 },
+         ads: { admobAppId: 'ca-app-pub-6858485929245224~1950147897', admobRewardUnitId: '' },
+         businesses: {
+          normal: [
+            { id:'bakkal', nameTR:'Bakkal', nameEN:'Grocery', level:0, baseIncome:0.5, baseCost:10, uncollected:0, lastCollectedAt:0, manager:false },
+            { id:'kafe', nameTR:'Kafe', nameEN:'Cafe', level:0, baseIncome:1, baseCost:25, uncollected:0, lastCollectedAt:0, manager:false },
+            { id:'market', nameTR:'Market', nameEN:'Market', level:0, baseIncome:3, baseCost:80, uncollected:0, lastCollectedAt:0, manager:false },
+            { id:'restoran', nameTR:'Restoran', nameEN:'Restaurant', level:0, baseIncome:7, baseCost:160, uncollected:0, lastCollectedAt:0, manager:false },
+          ],
+          special: [
+            { id:'fabrika', nameTR:'Fabrika', nameEN:'Factory', level:0, baseIncome:25, baseCost:1200, uncollected:0, lastCollectedAt:0, manager:false },
+            { id:'holding', nameTR:'Holding', nameEN:'Holding', level:0, baseIncome:120, baseCost:8000, globalBonusPerLevel:0.02, uncollected:0, lastCollectedAt:0, manager:false },
+          ],
+          mega: [
+            { id:'ulke', nameTR:'Ülke', nameEN:'Country', level:0, baseIncome:2000, baseCost:1_000_000, globalMultiplier:1.5, unlockLevel:12, uncollected:0, lastCollectedAt:0, manager:false },
+            { id:'mega', nameTR:'Mega Holding', nameEN:'Mega Holding', level:0, baseIncome:4500, baseCost:5_000_000, globalMultiplier:2.0, unlockLevel:15, uncollected:0, lastCollectedAt:0, manager:false },
+          ]
+        },
+        football: {
+          matchEveryMs: 5*60*1000,
+          lastMatchAt: 0,
+          teams: [
+            { id:'istanbul', nameTR:'İstanbulspor', nameEN:'Istanbulspor', league:'Süper Lig', players:11, level:0, baseMatch:100, quality:1, stadium:0, training:0, sponsor:0, owned:false },
+            { id:'ankara', nameTR:'Ankara SK', nameEN:'Ankara SC', league:'1. Lig', players:11, level:0, baseMatch:60, quality:1, stadium:0, training:0, sponsor:0, owned:false },
+          ]
+        },
+                 bank: {
+          checking: 0,
+          dailyRate: 0,
+          lastInterestAt: 0,
+          timeDeposit: { amount:0, start:0, durationMs:0, rate:0, penalty:0.1 },
+          loans: [],
+          fx: { USD:{ price:35, holding:0, costBasis:0 }, EUR:{ price:38, holding:0, costBasis:0 }, XAU:{ price:2500, holding:0, costBasis:0 } },
+          shares: { price:10, holding:0, costBasis:0, lastDividendAt:0 },
+          portfolio: []
+        },
+        market: {
+          cat: 'homes',
+          items: [
+            { id:'apt1', cat:'realestate', cat2:'homes', nameTR:'Apartman Dairesi', nameEN:'Apartment', cost:50000, effect:{}, owned:0, image:'' },
+            { id:'house1', cat:'realestate', cat2:'homes', nameTR:'Müstakil Ev', nameEN:'House', cost:120000, effect:{}, owned:0, image:'' },
+            { id:'car1', cat:'vehicles', cat2:'cars', nameTR:'Sedan', nameEN:'Sedan', cost:80000, effect:{}, owned:0, image:'' },
+            { id:'suv1', cat:'vehicles', cat2:'cars', nameTR:'SUV', nameEN:'SUV', cost:150000, effect:{}, owned:0, image:'' },
+            { id:'phone', cat:'electronics', cat2:'other', nameTR:'Akıllı Telefon', nameEN:'Smartphone', cost:1000, effect:{ clickPct:0.05 }, owned:0 },
+            { id:'bike', cat:'vehicles', cat2:'other', nameTR:'Bisiklet', nameEN:'Bicycle', cost:500, effect:{ levelPct:0.02 }, owned:0 },
+            { id:'watch', cat:'jewelry', cat2:'other', nameTR:'Saat', nameEN:'Watch', cost:2500, effect:{ adPlus:1 }, owned:0 },
+            { id:'pc', cat:'electronics', cat2:'other', nameTR:'Bilgisayar', nameEN:'Computer', cost:6000, effect:{ incomePct:0.04 }, owned:0 },
+          ]
+        },
+        rd: { clickPct:0, incomePct:0, level:0 },
+        profile: { name:'', avatar:'' },
+        tasks: {
+          daily: [
+            { id:'d_click', nameTR:'500 Tıklama', nameEN:'500 Clicks', goal:500, progress:0, reward:1, day:'' },
+            { id:'d_invest', nameTR:'1 Yatırım', nameEN:'1 Investment', goal:1, progress:0, reward:1, day:'' },
+            { id:'d_market', nameTR:'1 Market Alımı', nameEN:'1 Market Purchase', goal:1, progress:0, reward:1, day:'' },
+          ]
+        },
+        ui: { screen:'home', bizSub:'normal', invSub:'bank' },
+        lastTickAt: now(),
+        lastSaveAt: 0,
+      };
+    }
+
+    function generateCardNumber() {
+      function rnd(n){ return Math.floor(Math.random()*n); }
+      const parts = [
+        4000 + rnd(500),
+        1000 + rnd(900),
+        1000 + rnd(900),
+        1000 + rnd(900)
+      ];
+      return parts.join(' ');
+    }
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem('tt_save');
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        const s = { ...defaultState(), ...parsed };
+        // Ensure nested defaults
+        s.businesses = s.businesses || defaultState().businesses;
+        s.football = s.football || defaultState().football;
+        s.bank = s.bank || defaultState().bank;
+        s.market = s.market || defaultState().market;
+        s.rd = s.rd || defaultState().rd;
+        s.tasks = s.tasks || defaultState().tasks;
+        return s;
+      } catch(e) { console.error(e); try { toast('Kayıt yüklenemedi, yeni oyun başlatılıyor'); } catch(_) {} return defaultState(); }
+    }
+
+    function saveState(notify=true) {
+      try {
+        localStorage.setItem('tt_save', JSON.stringify(state));
+        state.lastSaveAt = now();
+        if (notify) toast(t('Save'));
+      } catch(e) { console.error(e); }
+    }
+
+    // ---------- Core Mechanics ----------
+    function levelThreshold(lv) { return 100 * Math.pow(2, lv-1); }
+    function perClickBase(lv) { return 0.5 * Math.pow(2, lv-1); }
+
+    function globalMultiplier() {
+      let m = 1;
+      // Prestige: +5% per point
+      m *= (1 + 0.05 * (state.prestige.points||0));
+      // Holding special
+      const holding = (state.businesses.special||[]).find(b=>b.id==='holding');
+      if (holding && holding.level>0 && holding.globalBonusPerLevel) m *= (1 + holding.level * holding.globalBonusPerLevel);
+      // Mega
+      (state.businesses.mega||[]).forEach(mg=>{ if (mg.level>0 && mg.globalMultiplier) m *= Math.pow(mg.globalMultiplier, mg.level); });
+      return m;
+    }
+
+    function clickMultiplier() {
+      let m = 1;
+      // Ads (with market adPlus bonus)
+      const extraAd = (state.market.items||[]).reduce((s,it)=> s + ((it.owned||0) * ((it.effect&&it.effect.adPlus)||0)), 0);
+      const adActive = state.ad && state.ad.activeUntil>now();
+      const adMult = adActive ? (state.ad.base + (state.ad.level-1)*2 + extraAd) : 1;
+      m *= adMult;
+      // R&D + Market items
+      m *= (1 + (state.rd.clickPct||0));
+      (state.market.items||[]).forEach(it=>{ if (it.owned>0 && it.effect && it.effect.clickPct) m *= (1 + it.effect.clickPct * it.owned); });
+      return m;
+    }
+
+    function incomeMultiplier() {
+      let m = globalMultiplier();
+      // Rewarded ad boost: +20% business income for 1h
+      if (state.ad.boostUntil && state.ad.boostUntil>now()) m *= 1.2;
+      m *= (1 + (state.rd.incomePct||0));
+      (state.market.items||[]).forEach(it=>{ if (it.owned>0 && it.effect && it.effect.incomePct) m *= (1 + it.effect.incomePct * it.owned); });
+      return m;
+    }
+
+    function perSecondIncome() {
+      const inc = (list)=> list.reduce((sum,b)=> sum + buildingIncome(b), 0);
+      const bn = inc(state.businesses.normal||[]);
+      const bs = inc(state.businesses.special||[]);
+      const bm = inc(state.businesses.mega||[]);
+      const foot = 0; // disable direct football in perSecond; handled via matches
+      return (bn + bs + bm + foot) * incomeMultiplier();
+    }
+
+    // Collectable idle: accumulate per business with 24h expiry
+    function accumulateUncollected(dtMs) {
+      const expireMs = 24*60*60*1000;
+      const applyList = (list)=> list.forEach(b=>{
+        if ((b.level||0)<=0) return;
+        if (!b.lastCollectedAt) b.lastCollectedAt = now();
+        const perSec = buildingIncome(b) * (incomeMultiplier());
+        b.uncollected = (b.uncollected||0) + perSec * (dtMs/1000);
+        // expiry
+        if (now() - b.lastCollectedAt > expireMs && !b.manager) { b.uncollected = 0; b.lastCollectedAt = now(); }
+        // auto collect if manager
+        if (b.manager && b.uncollected>0 && now() - b.lastCollectedAt > 60*60*1000) { addBalance(b.uncollected); b.uncollected=0; b.lastCollectedAt=now(); }
+      });
+      applyList(state.businesses.normal||[]);
+      applyList(state.businesses.special||[]);
+      applyList(state.businesses.mega||[]);
+    }
+
+    function collectBusiness(id) {
+      const all = [...(state.businesses.normal||[]), ...(state.businesses.special||[]), ...(state.businesses.mega||[])];
+      const b = all.find(x=>x.id===id); if (!b) return;
+      const amt = b.uncollected||0; if (amt<=0) return;
+      addBalance(amt); b.uncollected = 0; b.lastCollectedAt = now();
+      toast('+'+formatMoney(amt));
+    }
+
+    function buildingIncome(b) {
+      const base = b.baseIncome || 0;
+      const lvl = b.level || 0;
+      if (lvl<=0) return 0;
+      // Common idle formula: base * level * (1 + 0.15*(level-1))
+      return base * lvl * (1 + 0.15*(lvl-1));
+    }
+
+    function buildingCost(b) {
+      const lvl = b.level || 0;
+      return (b.baseCost||10) * Math.pow(1.15, lvl);
+    }
+
+    function addBalance(v) {
+      const add = Math.max(0, v);
+      state.balance += add;
+      state.totalEarned += add;
+    }
+
+    function spend(cost) {
+      if (state.balance >= cost) { state.balance -= cost; return true; }
+      return false;
+    }
+
+    function doClick() {
+      state.clicks += 1;
+      const pc = perClickBase(state.level) * clickMultiplier();
+      addBalance(pc);
+      // Level progress by clicks
+      const need = levelThreshold(state.level);
+      const have = state.clicks;
+      if (have >= need) {
+        state.level += 1;
+        // carry-over extra clicks
+        state.clicks = have - need;
+      }
+      // Task progress
+      const d = state.tasks.daily.find(x=>x.id==='d_click');
+      if (d) { ensureDaily(d); d.progress = clamp(d.progress+1, 0, d.goal); }
+    }
+
+    function ensureDaily(task) {
+      const dk = todayKey();
+      if (task.day !== dk) { task.day = dk; task.progress = 0; }
+    }
+
+    // Gifts
+    function giftReadyInfo() {
+      const dk = todayKey();
+      if (state.gift.dayKey !== dk) { state.gift.dayKey = dk; state.gift.claimsToday = 0; }
+      const readyAt = (state.gift.last||0) + 10*60*1000;
+      const remaining = Math.max(0, readyAt - now());
+      const ready = (state.gift.claimsToday < 5) && remaining === 0;
+      return { ready, remainingMs: remaining, claims: state.gift.claimsToday };
+    }
+    function claimGift() {
+      const gi = giftReadyInfo();
+      if (!gi.ready) return;
+      const amount = state.level * 100 * globalMultiplier();
+      addBalance(amount);
+      state.gift.last = now();
+      state.gift.claimsToday += 1;
+      toast('+' + formatMoney(amount) + ' 🎁');
+    }
+
+    // Ads
+    function watchAd() {
+      const dk = todayKey();
+      if (!state.ad.levelResetAt || now() > state.ad.levelResetAt) {
+        state.ad.level = 1; // reset level every 12h
+      }
+      state.ad.level += 1; // each watch +1 level => +2 multiplier above base 5
+      if (state.ad.level < 1) state.ad.level = 1;
+      state.ad.activeUntil = now() + 5*60*1000;
+      state.ad.levelResetAt = now() + 12*60*60*1000;
+      // 1 hour +20% business income boost
+      state.ad.boostUntil = now() + 60*60*1000;
+    }
+
+    // AdMob glue
+    function initAdMob() {
+      try {
+        if (window.admob && window.admob.start) {
+          window.admob.start({ appId: (state.ads && state.ads.admobAppId) || 'ca-app-pub-6858485929245224~1950147897' });
+        }
+      } catch(e) { /* ignore */ }
+    }
+    function showRewardAd() {
+      return new Promise((resolve, reject)=>{
+        try {
+          if (window.admob && window.admob.rewarded) {
+            window.admob.rewarded.load({ id: (state.ads && state.ads.admobRewardUnitId) || undefined }).then(()=>{
+              return window.admob.rewarded.show();
+            }).then(()=> resolve()).catch(err=>{ toast('Reklam hatası'); resolve(); });
+          } else {
+            toast('Reklam servisi kullanılamıyor');
+            resolve();
+          }
+        } catch(e) { toast('Reklam hatası: ' + (e&&e.message?e.message:'bilinmiyor')); resolve(); }
+      });
+    }
+
+    // Football
+    function teamMatchIncome(team) {
+      const lvl = team.level || 0;
+      const base = team.baseMatch || 0;
+      if (!team.owned || lvl<=0) return 0;
+      const playerBonus = 1 + (team.quality||1)*0.1;
+      const stadium = 1 + (team.stadium||0)*0.15;
+      const sponsor = 1 + (team.sponsor||0)*0.10;
+      const training = 1 + (team.training||0)*0.08;
+      return base * lvl * playerBonus * stadium * sponsor * training;
+    }
+    function footballIncomePerSecond() {
+      // Average per second approximation of 5-min match rewards
+      const teams = state.football.teams||[];
+      const perMatch = teams.reduce((s,t)=> s + teamMatchIncome(t), 0);
+      return perMatch / (state.football.matchEveryMs/1000);
+    }
+    function maybePlayMatches() {
+      if (!state.football.lastMatchAt) state.football.lastMatchAt = now();
+      if (now() - state.football.lastMatchAt >= state.football.matchEveryMs) {
+        const teams = state.football.teams||[];
+        let total = 0;
+        teams.forEach(t=>{ total += teamMatchIncome(t); });
+        total *= incomeMultiplier();
+        if (total>0) {
+          addBalance(total);
+          toast('⚽ +' + formatMoney(total));
+        }
+        state.football.lastMatchAt = now();
+      }
+    }
+
+    // Bank
+    function accrueBankInterest() {
+      const last = state.bank.lastInterestAt || 0;
+      if (now() - last < 60*1000) return; // every minute
+      const minutes = Math.floor((now() - last) / (60*1000));
+      state.bank.lastInterestAt = now();
+      const daily = state.bank.dailyRate || 0;
+      const perMin = daily / (24*60);
+      const interest = state.bank.checking * perMin * minutes;
+      state.bank.checking += interest;
+      addBalance(0); // no-op to keep totals consistent
+    }
+
+    function randomizeMarkets() {
+      const f = state.bank.fx;
+      f.USD.price = randomWalk(f.USD.price, 0.01, 20, 60);
+      f.EUR.price = randomWalk(f.EUR.price, 0.01, 22, 70);
+      f.XAU.price = randomWalk(f.XAU.price, 0.008, 1200, 4000);
+      const s = state.bank.shares;
+      s.price = randomWalk(s.price, 0.015, 2, 500);
+      // dividends hourly
+      if (!s.lastDividendAt) s.lastDividendAt = now();
+      if (now() - s.lastDividendAt >= 60*60*1000 && s.holding>0) {
+        const div = s.holding * (s.price * 0.0025);
+        state.bank.checking += div;
+        s.lastDividendAt = now();
+        toast('🏦 +' + formatMoney(div));
+      }
+      // push history for charts
+      pushPriceHistory('USD', f.USD.price);
+      pushPriceHistory('EUR', f.EUR.price);
+      pushPriceHistory('XAU', f.XAU.price);
+      pushShareHistory(s.price);
+      updateMiniCharts();
+    }
+
+    // ----- Chart helpers -----
+    const fxHistory = { USD: [], EUR: [], XAU: [] };
+    let shareHistory = [];
+    const charts = {};
+
+    function pushPriceHistory(sym, price) {
+      const arr = fxHistory[sym]; if (!arr) return;
+      arr.push({ t: now(), p: price });
+      if (arr.length > 50) arr.shift();
+    }
+    function pushShareHistory(price) {
+      shareHistory.push({ t: now(), p: price });
+      if (shareHistory.length > 50) shareHistory.shift();
+    }
+
+    function destroyFXCharts() {
+      ['USD','EUR','XAU'].forEach(sym=>{
+        const id = 'fxChart_' + sym;
+        if (charts[id]) { try { charts[id].destroy(); } catch(_) {} delete charts[id]; }
+      });
+    }
+
+    function initMiniChart(canvasId, sym) {
+      try {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx || charts[canvasId]) return;
+        charts[canvasId] = new Chart(ctx, {
+          type: 'line',
+          data: { labels: [], datasets: [{ label: sym + ' Price', data: [], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.15)', tension: 0.25, pointRadius: 0 }] },
+          options: { responsive: true, animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+        // Seed history if empty so chart isn't blank
+        const arr = fxHistory[sym];
+        if (arr && arr.length === 0) {
+          const p = (state.bank.fx[sym] && state.bank.fx[sym].price) || 0;
+          const t = now();
+          arr.push({ t: t-2000, p });
+          arr.push({ t: t-1000, p });
+          arr.push({ t, p });
+        }
+        // Initial paint
+        const ch = charts[canvasId];
+        const hist = fxHistory[sym] || [];
+        ch.data.labels = hist.map(x=> new Date(x.t).toLocaleTimeString());
+        ch.data.datasets[0].data = hist.map(x=> x.p);
+        ch.update();
+      } catch(e) {/* ignore */}
+    }
+
+    function updateMiniCharts() {
+      Object.entries(fxHistory).forEach(([sym, arr])=>{
+        const id = 'fxChart_' + sym;
+        const chart = charts[id]; if (!chart) return;
+        chart.data.labels = arr.map(x=> new Date(x.t).toLocaleTimeString());
+        chart.data.datasets[0].data = arr.map(x=> x.p);
+        chart.update();
+      });
+      // shares chart if added later
+    }
+
+    // Prestige
+    function prestigeGainPreview() {
+      const total = Math.max(0, (state.totalEarned || 0));
+      return Math.floor(Math.sqrt(total) / 1_000);
+    }
+    function updateAutoPrestige() {
+      const should = prestigeGainPreview();
+      if ((state.prestige.points||0) < should) {
+        const diff = should - (state.prestige.points||0);
+        state.prestige.points = should;
+        state.prestige.level = should;
+        toast(t('Prestige') + ' +' + diff);
+      }
+    }
+
+    // ---------- UI Rendering ----------
+    const qs = (s, el=document)=> el.querySelector(s);
+    const qsa = (s, el=document)=> Array.from(el.querySelectorAll(s));
+
+    function renderHeader() {
+      qs('#bankName').textContent = t('TurkeyBank');
+      qs('#prestigeBadge').textContent = 'P' + (state.prestige.points||0);
+      qs('#cardNumber').textContent = state.cardNumber || generateCardNumber();
+      qs('#iBalanceLabel').textContent = t('Balance');
+      qs('#iLevelLabel').textContent = t('Level');
+      qs('#iPerSecLabel').textContent = t('PerSecond');
+      qs('#iPrestigeMoneyLabel').textContent = t('PrestigeMoney');
+      qs('#balance').textContent = formatMoney(state.balance);
+      qs('#level').textContent = nf.format(state.level);
+      const ps = perSecondIncome();
+      qs('#perSecond').textContent = formatMoney(ps);
+      qs('#statIncome').textContent = formatMoney(ps);
+      qs('#statClicks').textContent = nf.format(state.clicks);
+      qs('#statTotal').textContent = formatMoney(state.totalEarned);
+      qs('#btnSave').textContent = t('Save');
+      qs('#btnReset').textContent = t('ResetGame');
+    }
+
+    function renderClicker() {
+      const pc = perClickBase(state.level) * clickMultiplier();
+      qs('#tapBtn').textContent = `${t('Tap')} ${nfTRY.format(pc)}`;
+      const need = levelThreshold(state.level);
+      const prog = clamp((state.clicks / need) * 100, 0, 100);
+      qs('#levelBar').style.width = prog + '%';
+      qs('#levelText').textContent = `Lv${state.level} • ${nf.format(state.clicks)} / ${nf.format(need)}`;
+      qs('#levelNext').textContent = `+${nfTRY.format(perClickBase(state.level))}`;
+    }
+
+    function renderGiftsAds() {
+      qs('#iGiftTitle').textContent = t('GiftTitle');
+      qs('#giftInfo').textContent = t('GiftInfo');
+      qs('#btnGift').textContent = t('GiftGet');
+      const gi = giftReadyInfo();
+      qs('#giftCounter').textContent = `${gi.claims}/5`;
+      const btn = qs('#btnGift');
+      btn.disabled = !gi.ready;
+      const sec = Math.ceil(gi.remainingMs/1000);
+      qs('#giftTimer').textContent = gi.ready ? t('GiftReady') : (t('NotReady') + ` • ${mmss(sec)}`);
+
+      qs('#iAdTitle').textContent = t('AdTitle');
+      qs('#adInfo').textContent = t('AdInfo');
+      const active = state.ad.activeUntil>now();
+      const mult = active ? (state.ad.base + (state.ad.level-1)*2 + (state.market.items||[]).reduce((s,it)=> s + ((it.owned||0) * ((it.effect&&it.effect.adPlus)||0)), 0)) : 1;
+      qs('#adBadge').textContent = '×' + mult;
+      qs('#adTimer').textContent = active ? (t('AdsActive') + ` • ${mmss(Math.ceil((state.ad.activeUntil-now())/1000))}`) : t('AdsInactive');
+    }
+
+    function mmss(s) {
+      s = Math.max(0, s|0);
+      const m = (s/60)|0; const r = s%60;
+      return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0');
+    }
+
+    function renderTasks() {
+      qs('#iTasks').textContent = t('Tasks');
+      const box = qs('#tasksList');
+      box.innerHTML = '';
+      (state.tasks.daily||[]).forEach(task=>{
+        ensureDaily(task);
+        const pct = clamp((task.progress/task.goal)*100, 0, 100);
+        const done = task.progress>=task.goal;
+        const title = state.lang==='tr' ? task.nameTR : task.nameEN;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="row space">
+            <div class="h">${title} • ${t('Daily')}</div>
+            <div class="pill" style="background:#102c1b;border:1px solid #22c55e55;color:#bff2cf;">${task.progress}/${task.goal}</div>
+          </div>
+          <div class="progress"><span style="width:${pct}%;"></span></div>
+          <div class="row space">
+            <div class="hint">${t('Prestige')}: +${task.reward}</div>
+            <button class="btn ${done?'btn-ok':''}" ${done?'':'disabled'} data-task="${task.id}">${done?(state.lang==='tr'?'Tamamlandı':'Completed'):t('Complete')}</button>
+          </div>
+        `;
+        box.appendChild(div);
+      });
+      qsa('[data-task]').forEach(btn=> btn.onclick = ()=> {
+        const id = btn.getAttribute('data-task');
+        const task = state.tasks.daily.find(x=>x.id===id);
+        if (task && task.progress>=task.goal) {
+          state.prestige.points += task.reward;
+          state.prestige.level = state.prestige.points;
+          task.progress = 0;
+          task.day = todayKey();
+          toast('+'+task.reward+' ' + t('Prestige'));
+          renderAll();
+          saveState(false);
+        }
+      });
+    }
+
+    function renderBusinesses() {
+      // Tabs labels
+      qs('#tabNormal').textContent = t('Normal');
+      qs('#tabSpecial').textContent = t('Special');
+      qs('#tabMega').textContent = t('Mega');
+
+      const list = qs('#bizList');
+      list.innerHTML = '';
+      const sub = state.ui.bizSub;
+      const arr = state.businesses[sub] || [];
+      arr.forEach(b=>{
+        const name = state.lang==='tr' ? (b.nameTR||b.id) : (b.nameEN||b.id);
+        const incPerSec = buildingIncome(b) * incomeMultiplier();
+        const cost = buildingCost(b);
+        const can = state.balance >= cost;
+        const locked = (sub==='mega' && state.level < (b.unlockLevel||0));
+        const it = document.createElement('div'); it.className = 'item';
+        const uncol = formatMoney(b.uncollected||0);
+        it.innerHTML = `
+          <div class="row space">
+            <div class="biz-row"><div class="biz-icon">🏪</div><div class="h">${name}</div></div>
+            <div class="pill">${t('Owned')}: ${b.level||0}</div>
+          </div>
+          <div class="meta"><div>${t('Income')}: <b>${formatMoney(incPerSec)}/s</b> • Biriken: <b>${uncol}</b> • Toplam/s: <b>${formatMoney(incPerSec*(b.level||0))}</b></div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
+          <div class="two">
+            <button class="btn btn-primary" ${(!can||locked)?'disabled':''} data-bid="${b.id}">${b.level>0?t('Upgrade'):t('Buy')}</button>
+                         <button class="btn" data-collect="${b.id}">${t('Collect')}</button>
+          </div>
+                      <div class="row space"><div class="hint">${locked?`🔒 Lv${b.unlockLevel}`:''}</div><button class="btn" data-manager="${b.id}">${b.manager?t('ManagerActive'):t('ManagerHire')}</button></div>
+        `;
+        list.appendChild(it);
+      });
+      qsa('[data-collect]').forEach(btn=> btn.onclick = ()=>{ collectBusiness(btn.getAttribute('data-collect')); renderBusinesses(); renderHeader(); saveState(false); });
+      qsa('[data-manager]').forEach(btn=> btn.onclick = ()=>{ const id=btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(!b) return; const mc=1000 + (b.level||0)*500; if (!b.manager) { if (spend(mc)) { b.manager=true; b.lastCollectedAt = now(); } } else { b.manager=false; } renderBusinesses(); saveState(false); });
+      qsa('[data-bid]').forEach(btn=> btn.onclick = ()=>{
+        const id = btn.getAttribute('data-bid');
+        const sub = state.ui.bizSub;
+        const arr = state.businesses[sub] || [];
+        const b = arr.find(x=>x.id===id);
+        if (!b) return;
+        const cost = buildingCost(b);
+        const locked = (sub==='mega' && state.level < (b.unlockLevel||0));
+        if (locked) return;
+        if (spend(cost)) { b.level = (b.level||0)+1; renderAll(); saveState(false); }
+      });
+
+      // Football only in Mega tab
+      const footCard = qs('#footballCard');
+      if (state.ui.bizSub==='mega') {
+        footCard.style.display = '';
+        footCard.innerHTML = `
+          <div class="row space">
+            <div style="font-weight:800;">⚽ <span id="iFootball">${t('Football')}</span></div>
+            <div class="pill">5 dk</div>
+          </div>
+          <div class="divider"></div>
+          <div class="list" id="teamsList"></div>
+          <div class="hint" id="matchTimer">${t('NextMatch')}: 05:00</div>
+        `;
+        renderFootball();
+      } else {
+        footCard.style.display = 'none';
+        footCard.innerHTML = '';
+      }
+    }
+
+    function renderFootball() {
+      qs('#iFootball').textContent = t('Football');
+      const box = qs('#teamsList');
+      box.innerHTML='';
+      (state.football.teams||[]).forEach(tm=>{
+        const name = state.lang==='tr' ? tm.nameTR : tm.nameEN;
+        const matchIncome = teamMatchIncome({ ...tm, owned:true, level:Math.max(1, tm.level) }) * incomeMultiplier();
+        const buyCost = 500 + (tm.baseMatch*10);
+        const upCost = 200 + tm.level * 220;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="row space"><div class="h">${name} • ${tm.league}</div><div class="pill">${t('Owned')}: ${tm.level}</div></div>
+          <div class="meta"><div>${t('Income')}: <b>${formatMoney(matchIncome)}/maç</b></div><div>${t('Cost')}: <b>${formatMoney(tm.owned?upCost:buyCost)}</b></div></div>
+          <div class="two">
+            <button class="btn ${state.balance>=(tm.owned?upCost:buyCost)?'btn-primary':''}" data-team="${tm.id}" data-act="buy">${tm.owned?t('Upgrade'):t('Buy')}</button>
+                         <button class="btn" data-team="${tm.id}" data-act="transfer">${t('TransferLbl')}</button>
+          </div>
+                      <div class="three">
+              <button class="btn" data-team="${tm.id}" data-act="stadium">${t('StadiumLbl')}</button>
+              <button class="btn" data-team="${tm.id}" data-act="training">${t('TrainingLbl')}</button>
+              <button class="btn" data-team="${tm.id}" data-act="sponsor">${t('SponsorshipLbl')}</button>
+            </div>
+          <div class="hint">Kalite: ${tm.quality||1} • Stad: ${tm.stadium||0} • Ant: ${tm.training||0} • Spon: ${tm.sponsor||0}</div>
+        `;
+        box.appendChild(div);
+      });
+      qsa('[data-team]').forEach(btn=> btn.onclick = ()=>{
+        const id = btn.getAttribute('data-team');
+        const act = btn.getAttribute('data-act');
+        const tm = state.football.teams.find(x=>x.id===id);
+        if (!tm) return;
+        if (act==='buy') {
+          const cost = tm.owned ? (200 + tm.level * 220) : (500 + tm.baseMatch*10);
+          if (spend(cost)) { tm.owned = true; tm.level = (tm.level||0)+1; }
+        } else if (act==='transfer') {
+          const c = 100 + (tm.quality||1) * 120;
+          if (spend(c)) tm.quality = (tm.quality||1)+1;
+        } else if (act==='stadium') {
+          const c = 300 + (tm.stadium||0) * 300;
+          if (spend(c)) tm.stadium = (tm.stadium||0)+1;
+        } else if (act==='training') {
+          const c = 240 + (tm.training||0) * 240;
+          if (spend(c)) tm.training = (tm.training||0)+1;
+        } else if (act==='sponsor') {
+          const c = 200 + (tm.sponsor||0) * 260;
+          if (spend(c)) tm.sponsor = (tm.sponsor||0)+1;
+        }
+        // task invest
+        const d = state.tasks.daily.find(x=>x.id==='d_invest');
+        if (d) { ensureDaily(d); d.progress = clamp(d.progress+1, 0, d.goal); }
+        renderBusinesses(); saveState(false);
+      });
+
+      const remain = Math.max(0, state.football.matchEveryMs - (now() - (state.football.lastMatchAt||0)));
+      qs('#matchTimer').textContent = t('NextMatch')+`: `+ mmss(Math.ceil(remain/1000));
+    }
+
+    function renderInvestments() {
+      const tabs = qs('#invTabs');
+      tabs.querySelectorAll('.subtab').forEach(btn=>{
+        const key = btn.getAttribute('data-subtab');
+        btn.textContent = t({bank:'Bank',fx:'FX',shares:'Shares',rnd:'RnD'}[key]);
+        btn.classList.toggle('active', state.ui.invSub===key);
+        btn.onclick = ()=>{ state.ui.invSub = key; renderInvestments(); };
+      });
+
+      const panels = qs('#invPanels');
+      panels.innerHTML = '';
+      if (state.ui.invSub==='bank') renderBankPanels(panels);
+      else if (state.ui.invSub==='fx') renderFXPanels(panels);
+      else if (state.ui.invSub==='shares') renderSharePanels(panels);
+      else if (state.ui.invSub==='rnd') renderRnDPanel(panels);
+
+      // Portfolio
+      const port = document.createElement('div'); port.className='item';
+      const totalPL = computePortfolioPL();
+      port.innerHTML = `
+                  <div class="h">📊 ${t('Portfolio')}</div>
+        <div class="meta"><div>Toplam P/L: <b>${formatMoney(totalPL)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
+        <div class="list" id="portList"></div>
+      `;
+      panels.appendChild(port);
+      renderPortfolioList();
+    }
+
+    function computePortfolioPL() {
+      let pl = 0;
+      Object.entries(state.bank.fx).forEach(([sym,x])=>{ const avg = x.holding>0 ? x.costBasis/x.holding : 0; pl += (x.price - avg) * x.holding; });
+      const s = state.bank.shares; const savg = s.holding>0 ? s.costBasis/s.holding : 0; pl += (s.price - savg) * s.holding;
+      return pl;
+    }
+    function renderPortfolioList() {
+      const box = qs('#portList'); if (!box) return; box.innerHTML='';
+      const rows = [];
+      Object.entries(state.bank.fx).forEach(([sym,x])=>{ if (x.holding>0) rows.push({name:sym, qty:x.holding, price:x.price}); });
+      const s = state.bank.shares; if (s.holding>0) rows.push({name:'BANK', qty:s.holding, price:s.price});
+      rows.forEach(r=>{
+        const el = document.createElement('div'); el.className='item';
+        el.innerHTML = `<div class="row space"><div>${r.name}</div><div>${r.qty.toFixed(3)} @ ₺${r.price.toFixed(2)}</div></div>`;
+        box.appendChild(el);
+      });
+    }
+
+    function renderBankPanels(panels) {
+      // Checking
+      const chk = document.createElement('div'); chk.className = 'item';
+      chk.innerHTML = `
+        <div class="h">🏦 ${t('Checking')}</div>
+        <div class="meta"><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div><div></div></div>
+        <div class="two">
+          <div>
+            <label>${t('Amount')}</label>
+            <input type="number" inputmode="decimal" min="0" step="0.01" id="amtChk">
+          </div>
+          <div class="row" style="align-items:flex-end;">
+            <button class="btn" id="btnDep">${t('Deposit')}</button>
+            <button class="btn" id="btnWit">${t('Withdraw')}</button>
+          </div>
+        </div>
+      `;
+      panels.appendChild(chk);
+      qs('#btnDep').onclick = ()=> {
+        const v = parseFloat(qs('#amtChk').value||'0');
+        if (Number.isFinite(v) && v>0 && spend(v)) { state.bank.checking += v; renderInvestments(); saveState(false); }
+      };
+      qs('#btnWit').onclick = ()=> {
+        const v = parseFloat(qs('#amtChk').value||'0');
+        if (Number.isFinite(v) && v>0 && state.bank.checking>=v) { state.bank.checking -= v; state.balance += v; renderInvestments(); saveState(false); }
+      };
+
+      // Time deposit
+      const td = state.bank.timeDeposit;
+      const tdp = document.createElement('div'); tdp.className='item';
+      const mature = td.amount>0 && (now() >= td.start + (td.durationMs||0));
+      tdp.innerHTML = `
+        <div class="h">⏳ ${t('TimeDeposit')}</div>
+        <div class="meta"><div>${t('Amount')}: <b>${formatMoney(td.amount)}</b></div><div>Vade: <b>${td.durationMs? (td.durationMs/3600000)+'saat' : '-'}</b> • Oran: <b>${((td.rate||0)*100).toFixed(2)}%</b></div></div>
+        <div class="two">
+          <div>
+            <label>${t('Amount')}</label>
+            <input type="number" inputmode="decimal" min="0" step="0.01" id="tdAmt">
+          </div>
+          <div>
+            <label>Vade</label>
+            <select id="tdPlan">
+              <option value="3600000|0.02">1 Saat • %2</option>
+              <option value="21600000|0.15">6 Saat • %15</option>
+              <option value="43200000|0.28">12 Saat • %28</option>
+              <option value="86400000|0.5">24 Saat • %50</option>
+            </select>
+          </div>
+        </div>
+        <div class="row space" style="margin-top:8px;">
+          <button class="btn ${td.amount? '':'btn-primary'}" id="btnTDStart" ${td.amount?'disabled':''}>${t('Start')}</button>
+          <button class="btn ${mature? 'btn-ok':''}" id="btnTDEarly" ${td.amount? '':'disabled'}>${t('EarlyWithdraw')} (${t('Penalty')} ${(td.penalty*100)|0}%)</button>
+        </div>
+        <div class="hint">${td.amount? ('Maturity: ' + new Date(td.start + (td.durationMs||0)).toLocaleString()) : ''}</div>
+      `;
+      panels.appendChild(tdp);
+      qs('#btnTDStart').onclick = ()=>{
+        const v = parseFloat(qs('#tdAmt').value||'0');
+        const planVal = (qs('#tdPlan').value||'').split('|');
+        const dur = parseInt(planVal[0]||'0',10);
+        const rate = parseFloat(planVal[1]||'0');
+        if (v>0 && dur>0 && state.bank.checking>=v) {
+          state.bank.checking -= v;
+          td.amount = v; td.durationMs = dur; td.start = now(); td.rate = rate; td.penalty = 0.1;
+          renderInvestments(); saveState(false);
+          const task = state.tasks.daily.find(x=>x.id==='d_invest'); if (task){ ensureDaily(task); task.progress = clamp(task.progress+1,0,task.goal);} 
+        }
+      };
+      qs('#btnTDEarly').onclick = ()=>{
+        if (td.amount<=0) return;
+        let payout;
+        if (now() >= td.start + (td.durationMs||0)) {
+          const interest = td.amount * td.rate;
+          payout = td.amount + interest;
+        } else {
+          payout = td.amount * (1 - td.penalty);
+        }
+        state.bank.checking += payout;
+        td.amount = 0; td.durationMs=0; td.start=0; td.rate=0;
+        renderInvestments(); saveState(false);
+      };
+
+      // Loans
+      const ln = document.createElement('div'); ln.className='item';
+      ln.innerHTML = `
+        <div class="h">💳 ${t('Loans')}</div>
+        <div class="two">
+          <button class="btn btn-warn" id="btnLoanP">${t('PersonalLoan')} (₺1.000 @ 5d)</button>
+          <button class="btn btn-warn" id="btnLoanB">${t('BusinessLoan')} (₺10.000 @ 14d)</button>
+        </div>
+        <div class="list" id="loanList"></div>
+      `;
+      panels.appendChild(ln);
+      qs('#btnLoanP').onclick = ()=> takeLoan('ihtiyac', 1000, 0.05, 5);
+      qs('#btnLoanB').onclick = ()=> takeLoan('isletme', 10000, 0.08, 14);
+
+      renderLoans();
+    }
+
+    function takeLoan(type, amount, ratePerDay, termDays) {
+      state.bank.loans.push({ type, amount, rate: ratePerDay, remaining: amount*(1+ratePerDay*termDays), termDays, lastAccrued: now() });
+      state.balance += amount;
+      renderInvestments(); saveState(false);
+    }
+
+    function renderLoans() {
+      const box = qs('#loanList');
+      box.innerHTML='';
+      state.bank.loans.forEach((ln,idx)=>{
+        accrueLoan(ln);
+        const it = document.createElement('div'); it.className='item';
+        it.innerHTML = `
+          <div class="meta"><div>${ln.type==='ihtiyac'?t('PersonalLoan'):t('BusinessLoan')} • ${ln.termDays} ${t('Days')}</div><div>${t('Amount')}: <b>${formatMoney(ln.remaining)}</b></div></div>
+          <div class="row space"><div class="hint">Faiz: ${(ln.rate*100).toFixed(2)}%/gün</div><button class="btn" data-repay="${idx}">${t('Repay')}</button></div>
+        `;
+        box.appendChild(it);
+      });
+      qsa('[data-repay]').forEach(btn=> btn.onclick = ()=>{
+        const idx = parseInt(btn.getAttribute('data-repay'),10);
+        const ln = state.bank.loans[idx]; if (!ln) return;
+        if (state.balance >= ln.remaining) { state.balance -= ln.remaining; state.bank.loans.splice(idx,1); renderInvestments(); saveState(false); }
+      });
+    }
+
+    function accrueLoan(ln) {
+      const last = ln.lastAccrued||0;
+      if (now()-last < 60*1000) return; // per minute approx
+      const minutes = Math.floor((now()-last)/(60*1000));
+      ln.lastAccrued = now();
+      const perMin = ln.rate / (24*60);
+      ln.remaining *= (1 + perMin * minutes);
+      // auto small repayment if checking has money
+      const autoPay = Math.min(state.bank.checking, ln.remaining * 0.01);
+      state.bank.checking -= autoPay; ln.remaining -= autoPay;
+    }
+
+    function renderFXPanels(panels) {
+      const fx = state.bank.fx;
+      destroyFXCharts();
+      ['USD','EUR','XAU'].forEach(sym=>{
+        const x = fx[sym];
+        const it = document.createElement('div'); it.className='item';
+        const avg = x.holding>0 ? x.costBasis/x.holding : 0;
+        const pl = x.holding>0 ? (x.price - avg) * x.holding : 0;
+        const chartId = `fxChart_${sym}`;
+        it.innerHTML = `
+          <div class="row space"><div class="h">${sym}</div><div class="pill">${t('Holding')}: ${x.holding.toFixed(3)}</div></div>
+          <div class="meta"><div>${t('Price')}: <b>₺${x.price.toFixed(2)}</b> • Avg: <b>₺${avg.toFixed(2)}</b> • P/L: <b>${formatMoney(pl)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
+          <div style="background:#0f1a2b;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;">
+            <canvas id="${chartId}" height="140"></canvas>
+          </div>
+          <div class="two" style="margin-top:8px;">
+            <div>
+              <label>${t('Amount')}</label>
+              <input type="number" inputmode="decimal" min="0" step="0.001" id="fxAmt_${sym}">
+            </div>
+            <div class="row" style="align-items:flex-end;">
+              <button class="btn" data-fx="${sym}" data-act="buy">${t('BuyShort')}</button>
+              <button class="btn" data-fx="${sym}" data-act="sell">${t('SellShort')}</button>
+              <button class="btn" data-fx="${sym}" data-act="sellall">${t('SellAll')}</button>
+            </div>
+          </div>
+        `;
+        panels.appendChild(it);
+        // init chart if not exists
+        setTimeout(()=> initMiniChart(chartId, sym), 0);
+      });
+      qsa('[data-fx]').forEach(btn=> btn.onclick = ()=>{
+        const sym = btn.getAttribute('data-fx');
+        const act = btn.getAttribute('data-act');
+        const amt = parseFloat(qs('#fxAmt_'+sym).value||'0');
+        const x = state.bank.fx[sym]; if (!x) return;
+        if (act==='buy') {
+          if (!(amt>0)) return;
+          const cost = amt * x.price;
+          if (state.bank.checking >= cost) { state.bank.checking -= cost; x.costBasis += amt * x.price; x.holding += amt; state.bank.portfolio.push({ type:'FX', sym, qty:amt, price:x.price, time:now() }); }
+        } else if (act==='sell') {
+          if (!(amt>0)) return;
+          const sellQty = Math.min(amt, x.holding);
+          const proceeds = sellQty * x.price;
+          const ratio = x.holding>0 ? (sellQty/x.holding) : 0;
+          x.costBasis = Math.max(0, x.costBasis - x.costBasis*ratio);
+          x.holding = Math.max(0, x.holding-sellQty);
+          state.bank.checking += proceeds;
+        } else if (act==='sellall') {
+          const proceeds = x.holding * x.price;
+          x.holding = 0; x.costBasis = 0; state.bank.checking += proceeds;
+        }
+        const d = state.tasks.daily.find(xx=>xx.id==='d_invest'); if (d){ ensureDaily(d); d.progress = clamp(d.progress+1, 0, d.goal);} 
+        renderInvestments(); saveState(false);
+      });
+    }
+
+    function renderSharePanels(panels) {
+      const s = state.bank.shares;
+      const it = document.createElement('div'); it.className='item';
+      const avg = s.holding>0 ? s.costBasis/s.holding : 0;
+      const pl = s.holding>0 ? (s.price - avg) * s.holding : 0;
+      it.innerHTML = `
+        <div class="row space"><div class="h">🏛️ ${t('Shares')}</div><div class="pill">${t('Holding')}: ${s.holding.toFixed(2)}</div></div>
+        <div class="meta"><div>${t('Price')}: <b>₺${s.price.toFixed(2)}</b> • Avg: <b>₺${avg.toFixed(2)}</b> • P/L: <b>${formatMoney(pl)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
+        <div class="two">
+          <div>
+            <label>${t('Amount')}</label>
+            <input type="number" inputmode="decimal" min="0" step="0.01" id="shareAmt">
+          </div>
+          <div class="row" style="align-items:flex-end;">
+            <button class="btn" id="btnShareBuy">${t('BuyShort')}</button>
+            <button class="btn" id="btnShareSell">${t('SellShort')}</button>
+            <button class="btn" id="btnShareSellAll">${t('SellAll')}</button>
+          </div>
+        </div>
+      `;
+      panels.appendChild(it);
+      qs('#btnShareBuy').onclick = ()=> {
+        const amt = parseFloat(qs('#shareAmt').value||'0');
+        if (!(amt>0)) return;
+        const cost = amt * s.price;
+        if (state.bank.checking >= cost) { state.bank.checking -= cost; s.costBasis += amt * s.price; s.holding += amt; state.bank.portfolio.push({ type:'SHARE', sym:'BANK', qty:amt, price:s.price, time:now() }); renderInvestments(); saveState(false); }
+      };
+      qs('#btnShareSell').onclick = ()=> {
+        const amt = parseFloat(qs('#shareAmt').value||'0');
+        if (!(amt>0)) return;
+        const sell = Math.min(amt, s.holding);
+        const proceeds = sell * s.price;
+        const ratio = s.holding>0 ? (sell/s.holding) : 0;
+        s.costBasis = Math.max(0, s.costBasis - s.costBasis*ratio);
+        s.holding -= sell; state.bank.checking += proceeds; renderInvestments(); saveState(false);
+      };
+      qs('#btnShareSellAll').onclick = ()=> { const proceeds = s.holding * s.price; s.holding=0; s.costBasis=0; state.bank.checking += proceeds; renderInvestments(); saveState(false); };
+    }
+
+    function renderRnDPanel(panels) {
+      const it = document.createElement('div'); it.className='item';
+      it.innerHTML = `
+        <div class="h">🔬 ${t('RnD')}</div>
+        <div class="meta"><div>${t('RnDClick')}: <b>+${(state.rd.clickPct*100).toFixed(1)}%</b></div><div>${t('RnDIncome')}: <b>+${(state.rd.incomePct*100).toFixed(1)}%</b></div></div>
+        <div class="two">
+          <button class="btn btn-primary" id="btnRClick">${t('Research')} (+2% ${t('Tap')}) • ${formatMoney(5000)}</button>
+          <button class="btn btn-primary" id="btnRIncome">${t('Research')} (+2% ${t('PerSecond')}) • ${formatMoney(8000)}</button>
+        </div>
+      `;
+      panels.appendChild(it);
+      qs('#btnRClick').onclick = ()=>{ if (spend(5000)) { state.rd.clickPct += 0.02; renderInvestments(); saveState(false);} };
+      qs('#btnRIncome').onclick = ()=>{ if (spend(8000)) { state.rd.incomePct += 0.02; renderInvestments(); saveState(false);} };
+    }
+
+    function renderMarket() {
+      const tabs = qs('#marketTabs');
+      if (tabs) {
+        tabs.querySelectorAll('.subtab').forEach(btn=>{
+          const key = btn.getAttribute('data-mcat');
+          const active = (state.market.cat||'homes')===key;
+          btn.classList.toggle('active', active);
+          btn.onclick = ()=>{ state.market.cat = key; renderMarket(); };
+          btn.textContent = t({homes:'Homes',cars:'Cars',other:'Other'}[key]);
+        });
+      }
+      const box = qs('#marketList');
+      box.innerHTML='';
+      const cat = state.market.cat||'homes';
+      (state.market.items||[]).filter(itm=>{
+        if (!itm.cat2) return true;
+        return itm.cat2===cat;
+      }).forEach(itm=>{
+        const name = state.lang==='tr'? itm.nameTR : itm.nameEN;
+        const cost = itm.cost * Math.pow(1.2, itm.owned||0);
+        const it = document.createElement('div'); it.className='item';
+        const effects = [];
+        if (itm.effect && itm.effect.clickPct) effects.push('+'+(itm.effect.clickPct*100)+'% click');
+        if (itm.effect && itm.effect.levelPct) effects.push('+'+(itm.effect.levelPct*100)+'% level');
+        if (itm.effect && itm.effect.adPlus) effects.push('+Ad');
+        if (itm.effect && itm.effect.incomePct) effects.push('+'+(itm.effect.incomePct*100)+'% income');
+        it.innerHTML = `
+          <div class="row space"><div class="h">🛒 ${name}</div><div class="pill">x${itm.owned||0}</div></div>
+          <div class="meta"><div>${effects.join(', ')}</div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
+          <div class="row right"><button class="btn btn-primary" data-market="${itm.id}">${t('Buy')}</button></div>
+          ${itm.image?`<div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);"><img src="${itm.image}" alt="${name}" style="display:block;width:100%;height:160px;object-fit:cover;"></div>`:''}
+        `;
+        box.appendChild(it);
+      });
+      qsa('[data-market]').forEach(btn=> btn.onclick = ()=>{
+        const id = btn.getAttribute('data-market');
+        const it = state.market.items.find(x=>x.id===id); if (!it) return;
+        const cost = it.cost * Math.pow(1.2, it.owned||0);
+        if (spend(cost)) { it.owned=(it.owned||0)+1; renderMarket(); saveState(false);
+          const d = state.tasks.daily.find(x=>x.id==='d_market'); if (d){ ensureDaily(d); d.progress = clamp(d.progress+1,0,d.goal);} }
+      });
+    }
+
+    function renderProfileShowcase() {
+      const list = qs('#showcaseList'); if (!list) return;
+      list.innerHTML = '';
+      const owned = (state.market.items||[]).filter(it=> (it.owned||0) > 0);
+      if (owned.length===0) return;
+      owned.forEach(it=>{
+        const name = state.lang==='tr'? it.nameTR : it.nameEN;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="row space"><div class="h">${name}</div><div class="pill">x${it.owned}</div></div>
+          ${it.image?`<div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);"><img src="${it.image}" alt="${name}" style="display:block;width:100%;height:160px;object-fit:cover;"></div>`:''}
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function renderNav() {
+      // Toggle nav buttons by data-screen
+      qsa('nav .nav button').forEach(btn=>{
+        const key = btn.getAttribute('data-screen');
+        btn.classList.toggle('active', state.ui.screen===key);
+      });
+      // Toggle screens by id
+      qsa('main .screens').forEach(sc=> sc.classList.remove('active'));
+      const activeScreen = qs('#screen-' + state.ui.screen);
+      if (activeScreen) activeScreen.classList.add('active');
+
+      // Localized labels
+      qs('#iNavHome').textContent = t('Home');
+      qs('#iNavBiz').textContent = t('Businesses');
+      qs('#iNavInv').textContent = t('Investments');
+      qs('#iNavMarket').textContent = t('Market');
+      const profBtn = document.getElementById('iNavProfile'); if (profBtn) profBtn.textContent = t('Profile');
+      
+      // Profile labels
+      const nameLbl = document.querySelector('label[for=profileName]'); if (nameLbl) nameLbl.textContent = t('Username');
+      const btnSaveProfile = document.getElementById('btnSaveProfile'); if (btnSaveProfile) btnSaveProfile.textContent = t('SaveProfile');
+      
+      // Localize static TR strings in biz/football buttons on re-render
+      qsa('[data-manager]').forEach(btn=>{ const id = btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(b){ btn.textContent = b.manager ? t('ManagerActive') : t('ManagerHire'); }});
+      qsa('[data-team][data-act="transfer"]').forEach(btn=> btn.textContent = t('TransferLbl'));
+      qsa('[data-team][data-act="stadium"]').forEach(btn=> btn.textContent = t('StadiumLbl'));
+      qsa('[data-team][data-act="training"]').forEach(btn=> btn.textContent = t('TrainingLbl'));
+      qsa('[data-team][data-act="sponsor"]').forEach(btn=> btn.textContent = t('SponsorshipLbl'));
+    }
+
+    function renderSettings() {
+      qs('#iSettings').textContent = t('Settings');
+      qs('#btnCloseSettings').textContent = t('Close');
+      qs('#iLang').textContent = t('Language');
+      qs('#iLangHint').textContent = t('LanguageHint');
+      qs('#iSave').textContent = t('Save');
+      qs('#iSaveHint').textContent = t('Save');
+      qs('#iReset').textContent = t('ResetGame');
+      qs('#iResetHint').textContent = t('ResetGame');
+
+      // Prestige preview in header badge
+      const nextPrestige = prestigeGainPreview();
+      qs('#prestigeBadge').textContent = 'P' + (state.prestige.points||0) + ' → ' + nextPrestige;
+
+      qs('#langSelect').value = state.lang;
+      document.documentElement.style.colorScheme = state.dark? 'dark' : 'light';
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderClicker();
+      renderGiftsAds();
+      renderTasks();
+      renderBusinesses();
+      renderInvestments();
+      renderMarket();
+      renderProfileShowcase();
+      renderNav();
+      renderSettings();
+    }
+
+    // ---------- Event Wiring ----------
+    const clickAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYBHGZmZgAA');
+    const navAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYBHGZmZgAA');
+    function playClick(){ try{ clickAudio.currentTime=0; clickAudio.play(); }catch(e){} }
+    function playNav(){ try{ navAudio.currentTime=0; navAudio.play(); }catch(e){} }
+
+    function wire() {
+      qs('#tapBtn').onclick = ()=> { playClick(); doClick(); renderHeader(); renderClicker(); renderTasks(); saveState(false); };
+
+      qs('#btnGift').onclick = ()=> { claimGift(); renderHeader(); renderGiftsAds(); saveState(false); };
+      qs('#btnAd').onclick = ()=> { showRewardAd().then(()=> { watchAd(); renderGiftsAds(); saveState(false); }).catch(()=>{ watchAd(); renderGiftsAds(); saveState(false); }); };
+      qs('#btnSave').onclick = ()=> saveState();
+      qs('#btnReset').onclick = ()=> { if (confirm(t('ResetGame')+'?')) { try{ localStorage.removeItem('tt_save'); }catch(_){} state = defaultState(); renderAll(); } };
+
+
+      // Bottom nav
+      qsa('nav .nav button').forEach(btn=> btn.onclick = ()=>{ playNav(); state.ui.screen = btn.getAttribute('data-screen'); renderNav(); renderAll(); saveState(false); });
+
+      // Biz sub tabs
+      qsa('#bizTabs .subtab').forEach(btn=> btn.onclick = ()=>{ qsa('#bizTabs .subtab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); state.ui.bizSub = btn.getAttribute('data-subtab'); renderBusinesses(); saveState(false); });
+
+      // Settings
+      qs('#btnSettings').onclick = ()=> openSettings(true);
+      qs('#btnCloseSettings').onclick = ()=> openSettings(false);
+      qs('#langSelect').onchange = (e)=> { state.lang = e.target.value; renderAll(); saveState(false); };
+      
+      // Profile wiring
+      const nm = qs('#profileName'); if (nm) nm.value = state.profile?.name || '';
+      const av = qs('#avatar'); if (av && state.profile?.avatar) av.style.backgroundImage = `url('${state.profile.avatar}')`;
+      const fa = qs('#profileAvatar'); if (fa) fa.onchange = (e)=>{
+        const file = e.target.files && e.target.files[0]; if (!file) return;
+        const rdr = new FileReader();
+        rdr.onload = ()=> { state.profile = state.profile||{}; state.profile.avatar = rdr.result; av.style.backgroundImage = `url('${rdr.result}')`; saveState(false); };
+        rdr.readAsDataURL(file);
+      };
+      const sp = qs('#btnSaveProfile'); if (sp) sp.onclick = ()=>{ state.profile = state.profile||{}; state.profile.name = (nm&&nm.value)||''; toast('✔'); saveState(); renderProfileShowcase(); };
+      renderProfileShowcase();
+
+    }
+
+    function openSettings(show) {
+      qs('#settingsModal').classList.toggle('show', !!show);
+    }
+
+    function toast(msg) {
+      const el = qs('#toast'); el.textContent = msg; el.classList.add('show');
+      clearTimeout(toast._t); toast._t = setTimeout(()=> el.classList.remove('show'), 2800);
+    }
+
+    // ---------- Game Loop ----------
+    function tick() {
+      const nowMs = now();
+      const dt = Math.min(1000, nowMs - (state.lastTickAt||nowMs));
+      state.lastTickAt = nowMs;
+
+      // Passive income: accumulate per-business only (manual collect)
+      const ps = perSecondIncome();
+      accumulateUncollected(dt);
+
+      // Systems
+      maybePlayMatches();
+      accrueBankInterest();
+      if (!tick._markets) { // initialize history on first tick
+        pushPriceHistory('USD', state.bank.fx.USD.price);
+        pushPriceHistory('EUR', state.bank.fx.EUR.price);
+        pushPriceHistory('XAU', state.bank.fx.XAU.price);
+        pushShareHistory(state.bank.shares.price);
+        updateMiniCharts();
+        tick._markets = nowMs;
+      } else if (nowMs - tick._markets > 10000) { randomizeMarkets(); tick._markets = nowMs; }
+
+      // Auto prestige
+      if (!tick._prestige || nowMs - tick._prestige > 2000) { updateAutoPrestige(); tick._prestige = nowMs; }
+
+      // UI every 250ms
+      if (!tick._ui || nowMs - tick._ui > 250) { renderHeader(); renderGiftsAds(); if (state.ui.bizSub==='mega') renderFootball(); tick._ui = nowMs; }
+
+      requestAnimationFrame(tick);
+    }
+    
+    // Init timers to avoid undefined
+    toast._t = toast._t || null;
+    tick._markets = tick._markets || 0;
+    tick._prestige = tick._prestige || 0;
+    tick._ui = tick._ui || 0;
+    
+    // Offline gains on load
+    function applyOfflineGains() {
+      const last = state.lastTickAt || now();
+      const seconds = clamp(((now()-last)/1000)|0, 0, 8*60*60); // up to 8 hours
+      const gain = perSecondIncome() * seconds;
+      if (gain>0) { addBalance(gain); toast('⏱ +' + formatMoney(gain)); }
+    }
+
+    // ---------- Init ----------
+    (function init(){
+      document.body.classList.toggle('dark', !!state.dark);
+      renderAll();
+      wire();
+      applyOfflineGains();
+      requestAnimationFrame(tick);
+      // Try to load AdMob if available (Cordova/CAP/Android WebView)
+      initAdMob();
+      // Start overlay logic
+      setupStartOverlay();
+    })();
+
+    function setupStartOverlay() {
+      const overlay = qs('#startOverlay');
+      const hasSave = !!localStorage.getItem('tt_save');
+      qs('#startLang').value = state.lang;
+      qs('#startLang').onchange = (e)=> { state.lang = e.target.value; renderAll(); saveState(false); };
+      qs('#btnContinue').disabled = !hasSave;
+      qs('#startHint').textContent = hasSave ? '' : 'Kayıt bulunamadı, sıfırdan başlayabilirsiniz';
+      qs('#btnContinue').onclick = ()=> { overlay.classList.remove('show'); };
+      qs('#btnStartNew').onclick = ()=> {
+        if (hasSave) {
+          if (!confirm('Kayıtlı oyun var, sıfırdan başlamak ister misiniz?')) return;
+        }
+        localStorage.removeItem('tt_save');
+        state = defaultState();
+        state.lang = qs('#startLang').value;
+        renderAll();
+        overlay.classList.remove('show');
+      };
+      // Show only first time or when no save
+      if (!hasSave) overlay.classList.add('show');
+    }
+  
