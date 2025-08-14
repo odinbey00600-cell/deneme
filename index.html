@@ -711,7 +711,7 @@
             { id:'d_ads10', nameTR:'10 defa reklam izle', nameEN:'Watch 10 ads', goal:10, progress:0, reward:0, day:'' },
           ]
         },
-        ui: { screen:'home', bizSub:'normal', invSub:'bank' },
+        ui: { screen:'home', bizSub:'normal', invSub:'main' },
         lastTickAt: now(),
         lastSaveAt: 0,
       };
@@ -1032,49 +1032,24 @@
     }
 
     // Bank
-    function accrueBankInterest() {
-      const last = state.bank.lastInterestAt || 0;
-      if (now() - last < 60*1000) return; // every minute
-      const minutes = Math.floor((now() - last) / (60*1000));
-      state.bank.lastInterestAt = now();
-      const daily = state.bank.dailyRate || 0;
-      const perMin = daily / (24*60);
-      const interest = state.bank.checking * perMin * minutes;
-      state.bank.checking += interest;
-      addBalance(0); // no-op to keep totals consistent
-    }
+    function accrueBankInterest() { /* bank removed */ return; }
 
     function randomizeMarkets() {
-      const f = state.bank.fx;
-      f.USD.price = randomWalk(f.USD.price, 0.01, 20, 60);
-      f.EUR.price = randomWalk(f.EUR.price, 0.01, 22, 70);
-      f.XAU.price = randomWalk(f.XAU.price, 0.008, 1200, 4000);
-      const s = state.bank.shares;
-      s.price = randomWalk(s.price, 0.015, 2, 500);
-      // dividends hourly
-      if (!s.lastDividendAt) s.lastDividendAt = now();
-      if (now() - s.lastDividendAt >= 60*60*1000 && s.holding>0) {
-        const div = s.holding * (s.price * 0.0025);
-        state.bank.checking += div;
-        s.lastDividendAt = now();
-        toast('🏦 +' + formatMoney(div));
-      }
-      // push history for charts
-      pushPriceHistory('USD', f.USD.price);
-      pushPriceHistory('EUR', f.EUR.price);
-      pushPriceHistory('XAU', f.XAU.price);
-      pushShareHistory(s.price);
-      updateMiniCharts();
-      // invest symbols price walk
+      // update invest symbols only
       if (state.invest && state.invest.symbols) {
         ['stocks','crypto','startups','lottery'].forEach(cat=>{
           (state.invest.symbols[cat]||[]).forEach(a=>{
-            const baseStep = cat==='crypto'? 0.02 : 0.01;
+            const baseStep = cat==='crypto' ? 0.02 : 0.01;
             const step = cat==='lottery' ? 0.0 : baseStep;
-            const old = a.price;
+            const old = a.price || 1;
             const min = old * 0.6, max = old * 1.6;
             a.price = clamp(old * (1 + (Math.random()*2-1)*step), Math.max(1, min), max);
             a.ch = (a.price - old) / old;
+            if (state.ui.invSub==='detail' && state.invest.symbol===a.sym) {
+              if (!renderInvestments._hist) renderInvestments._hist = {};
+              const hist = (renderInvestments._hist[a.sym] = renderInvestments._hist[a.sym] || []);
+              hist.push(a.price); if (hist.length>60) hist.shift();
+            }
           });
         });
         if (typeof renderInvestments._redraw === 'function') renderInvestments._redraw();
@@ -1115,7 +1090,7 @@
         // Seed history if empty so chart isn't blank
         const arr = fxHistory[sym];
         if (arr && arr.length === 0) {
-          const p = (state.bank.fx[sym] && state.bank.fx[sym].price) || 0;
+          const p = 0;
           const t = now();
           arr.push({ t: t-2000, p });
           arr.push({ t: t-1000, p });
@@ -1763,12 +1738,7 @@
       // Systems
       maybePlayMatches();
       accrueBankInterest();
-      if (!tick._markets) { // initialize history on first tick
-        pushPriceHistory('USD', state.bank.fx.USD.price);
-        pushPriceHistory('EUR', state.bank.fx.EUR.price);
-        pushPriceHistory('XAU', state.bank.fx.XAU.price);
-        pushShareHistory(state.bank.shares.price);
-        updateMiniCharts();
+      if (!tick._markets) {
         tick._markets = nowMs;
       } else if (nowMs - tick._markets > 10000) { randomizeMarkets(); tick._markets = nowMs; }
 
