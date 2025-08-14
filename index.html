@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <title>Zombi Kaçışı - Zombie Survival</title>
+  <style>
+    :root {
+      --bg-0: #0b0f1a;
+      --bg-1: #0e1422;
+      --card: rgba(255, 255, 255, 0.06);
+      --text: #e7ecf3;
+      --muted: #9aa7b3;
+      --accent: #6be675;
+      --danger: #f97373;
+      --brand: #5a8dee;
+      --glass: rgba(16, 22, 35, 0.55);
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(1000px 1000px at 10% 10%, var(--bg-1), transparent),
+                  radial-gradient(900px 900px at 90% 10%, #0d1628, transparent),
+                  radial-gradient(1200px 1200px at 50% 130%, #0a1324, transparent),
+                  var(--bg-0);
+      color: var(--text);
+      font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      overscroll-behavior: none;
+      touch-action: none;
+    }
+
+    #app { height: 100%; }
+
+    #game-canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 40px),
+                  repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 40px);
+    }
+
+    #hud {
+      position: fixed;
+      top: calc(env(safe-area-inset-top) + 12px);
+      left: calc(env(safe-area-inset-left) + 12px);
+      right: calc(env(safe-area-inset-right) + 12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 10;
+      pointer-events: none;
+      padding: 0 6px;
+    }
+    .hud-left, .hud-right { display: flex; align-items: center; gap: 8px; }
+    .hud-item { pointer-events: auto; background: var(--glass); border: 1px solid var(--border); padding: 8px 10px; border-radius: 12px; box-shadow: var(--shadow); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    .hud-item span { color: var(--muted); margin-right: 6px; }
+
+    .btn {
+      pointer-events: auto;
+      appearance: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, background 160ms ease, border-color 160ms ease;
+      font-weight: 600;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn.primary { background: linear-gradient(180deg, #4b9fff, #2e6ee6); border-color: rgba(255,255,255,0.18); }
+    .btn.ghost { background: rgba(255,255,255,0.07); }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+      background: radial-gradient(800px 800px at 50% 40%, rgba(13,18,37,0.65), rgba(9,12,22,0.85));
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+    }
+    .overlay.visible { display: flex; }
+
+    .panel {
+      width: min(560px, 95vw);
+      background: linear-gradient(180deg, rgba(23,29,45,0.7), rgba(12,16,28,0.7));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .panel h1, .panel h2 { margin: 8px 0 8px 0; letter-spacing: 0.3px; }
+    .panel p { color: var(--muted); }
+    .panel .actions { display: flex; gap: 10px; margin-top: 10px; }
+
+    .hint { color: var(--muted); padding-left: 18px; margin: 14px 0; }
+
+    #controls {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .joystick {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      pointer-events: auto;
+      touch-action: none;
+      display: none;
+    }
+    .joystick .stick {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 60px;
+      height: 60px;
+      margin-left: -30px;
+      margin-top: -30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: transform 40ms linear;
+    }
+
+    @media (pointer: coarse), (max-width: 900px) {
+      .joystick { display: block; }
+      #joystick-move { left: calc(env(safe-area-inset-left) + 16px); bottom: calc(env(safe-area-inset-bottom) + 16px); }
+      #joystick-aim { right: calc(env(safe-area-inset-right) + 16px); bottom: calc(env(safe-area-inset-bottom) + 16px); }
+    }
+
+    @media (max-width: 520px) {
+      .panel { padding: 18px; }
+      .panel .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="hud" aria-live="polite">
+      <div class="hud-left">
+        <div class="hud-item"><span>Skor:</span> <strong id="score">0</strong></div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-item"><span>Can:</span> <strong id="health">100</strong></div>
+        <button id="pause-btn" class="btn ghost" aria-label="Duraklat">II</button>
+      </div>
+    </div>
+
+    <div id="menu" class="overlay visible" role="dialog" aria-modal="true">
+      <div class="panel">
+        <h1>Zombi Kaçışı</h1>
+        <p>Hayatta kal, zombileri yok et ve en yüksek skoru yap!</p>
+        <ul class="hint">
+          <li><strong>PC</strong>: WASD / Oklar ile hareket, fare ile nişan, tıkla ve basılı tutarak ateş et.</li>
+          <li><strong>Mobil</strong>: Sol joystick ile hareket, sağ joystick ile nişan ve ateş.</li>
+        </ul>
+        <div class="actions">
+          <button id="play-btn" class="btn primary">Oyuna Başla</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameover" class="overlay" role="dialog" aria-modal="true">
+      <div class="panel">
+        <h2>Oyun Bitti</h2>
+        <p>Skorun: <strong id="final-score">0</strong></p>
+        <div class="actions">
+          <button id="restart-btn" class="btn primary">Yeniden Oyna</button>
+          <button id="menu-btn" class="btn">Menü</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="controls">
+      <div id="joystick-move" class="joystick" aria-label="Hareket Joystick" role="application">
+        <div class="stick"></div>
+      </div>
+      <div id="joystick-aim" class="joystick" aria-label="Nişan/Ateş Joystick" role="application">
+        <div class="stick"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const hudScore = document.getElementById('score');
+      const hudHealth = document.getElementById('health');
+      const pauseBtn = document.getElementById('pause-btn');
+
+      const overlayMenu = document.getElementById('menu');
+      const overlayGameOver = document.getElementById('gameover');
+      const playBtn = document.getElementById('play-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const menuBtn = document.getElementById('menu-btn');
+      const finalScoreEl = document.getElementById('final-score');
+
+      const joystickMove = document.getElementById('joystick-move');
+      const joystickAim = document.getElementById('joystick-aim');
+
+      const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+      let state = 'menu';
+      let isPaused = false;
+
+      const input = {
+        keys: new Set(),
+        mouse: { x: 0, y: 0, down: false },
+        moveVec: { x: 0, y: 0 },
+        aimVec: { x: 0, y: 0 },
+        autoFire: false,
+      };
+
+      const game = {
+        width: 0,
+        height: 0,
+        now: 0,
+        dt: 0,
+        last: 0,
+        player: null,
+        bullets: [],
+        zombies: [],
+        score: 0,
+        spawnTimer: 0,
+        spawnInterval: 1.25,
+        minSpawn: 0.35,
+        difficultyTimer: 0,
+      };
+
+      function resize() {
+        const w = Math.floor(window.innerWidth * DPR);
+        const h = Math.floor(window.innerHeight * DPR);
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+        }
+        game.width = w;
+        game.height = h;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function vecLen(x, y) { return Math.hypot(x, y); }
+      function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+      function norm(x, y) { const l = Math.hypot(x, y) || 1; return { x: x / l, y: y / l, l }; }
+      function rand(a, b) { return a + Math.random() * (b - a); }
+
+      function createPlayer() {
+        const px = game.width / 2;
+        const py = game.height / 2;
+        return {
+          x: px, y: py, r: 12,
+          speed: 220,
+          angle: 0,
+          health: 100,
+          maxHealth: 100,
+          fireCooldown: 0,
+          fireRate: 7.5,
+          damageCooldown: 0,
+        };
+      }
+
+      function startGame() {
+        state = 'playing';
+        isPaused = false;
+        overlayMenu.classList.remove('visible');
+        overlayGameOver.classList.remove('visible');
+        game.player = createPlayer();
+        game.bullets = [];
+        game.zombies = [];
+        game.score = 0;
+        game.spawnTimer = 0;
+        game.spawnInterval = 1.15;
+        game.difficultyTimer = 0;
+      }
+
+      function toMenu() {
+        state = 'menu';
+        overlayMenu.classList.add('visible');
+        overlayGameOver.classList.remove('visible');
+      }
+
+      function gameOver() {
+        state = 'gameover';
+        overlayGameOver.classList.add('visible');
+        finalScoreEl.textContent = String(game.score);
+      }
+
+      playBtn.addEventListener('click', startGame);
+      restartBtn.addEventListener('click', startGame);
+      menuBtn.addEventListener('click', toMenu);
+      pauseBtn.addEventListener('click', () => {
+        if (state !== 'playing') return;
+        isPaused = !isPaused;
+      });
+
+      window.addEventListener('blur', () => {
+        if (state === 'playing') isPaused = true;
+      });
+
+      const keyMap = {
+        ArrowUp: 'up', KeyW: 'up',
+        ArrowDown: 'down', KeyS: 'down',
+        ArrowLeft: 'left', KeyA: 'left',
+        ArrowRight: 'right', KeyD: 'right',
+        Space: 'shoot',
+        KeyP: 'pause', Escape: 'pause',
+      };
+
+      window.addEventListener('keydown', (e) => {
+        const m = keyMap[e.code];
+        if (!m) return;
+        if (m === 'pause') { if (state === 'playing') isPaused = !isPaused; return; }
+        input.keys.add(m);
+      });
+      window.addEventListener('keyup', (e) => {
+        const m = keyMap[e.code];
+        if (!m) return;
+        input.keys.delete(m);
+      });
+
+      canvas.addEventListener('pointerdown', (e) => {
+        input.mouse.down = true;
+        const rect = canvas.getBoundingClientRect();
+        input.mouse.x = (e.clientX - rect.left) * DPR;
+        input.mouse.y = (e.clientY - rect.top) * DPR;
+      }, { passive: true });
+      window.addEventListener('pointerup', () => { input.mouse.down = false; }, { passive: true });
+      window.addEventListener('pointermove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        input.mouse.x = (e.clientX - rect.left) * DPR;
+        input.mouse.y = (e.clientY - rect.top) * DPR;
+      }, { passive: true });
+
+      function setupJoystick(root, onChange) {
+        const stick = root.querySelector('.stick');
+        let active = false;
+        let id = -1;
+        const radius = root.clientWidth / 2;
+
+        function setStick(dx, dy) {
+          stick.style.transform = `translate(${dx}px, ${dy}px)`;
+        }
+        function reset() { setStick(0, 0); onChange(0, 0, false); }
+
+        function handleStart(e) {
+          const t = e.changedTouches ? e.changedTouches[0] : e;
+          active = true; id = t.identifier ?? -1;
+          handleMove(e);
+        }
+        function handleMove(e) {
+          if (!active) return;
+          const tlist = e.changedTouches || [e];
+          let t = null;
+          for (let i = 0; i < tlist.length; i++) {
+            const cand = tlist[i];
+            if ((cand.identifier ?? -1) === id || id === -1) { t = cand; break; }
+          }
+          if (!t) return;
+          const rect = root.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = (t.clientX - cx);
+          const dy = (t.clientY - cy);
+          const { x, y, l } = norm(dx, dy);
+          const mag = Math.min(1, l / radius);
+          const sx = x * mag * (radius - 30);
+          const sy = y * mag * (radius - 30);
+          setStick(sx, sy);
+          onChange(x * mag, y * mag, true);
+        }
+        function handleEnd(e) {
+          const tlist = e.changedTouches || [e];
+          let ended = false;
+          for (let i = 0; i < tlist.length; i++) {
+            const cand = tlist[i];
+            if ((cand.identifier ?? -1) === id || id === -1) { ended = true; break; }
+          }
+          if (!ended) return;
+          active = false; id = -1; reset();
+        }
+
+        root.addEventListener('touchstart', handleStart, { passive: true });
+        root.addEventListener('touchmove', handleMove, { passive: true });
+        root.addEventListener('touchend', handleEnd, { passive: true });
+        root.addEventListener('touchcancel', handleEnd, { passive: true });
+        root.addEventListener('pointerdown', handleStart, { passive: true });
+        window.addEventListener('pointermove', handleMove, { passive: true });
+        window.addEventListener('pointerup', handleEnd, { passive: true });
+
+        reset();
+      }
+
+      setupJoystick(joystickMove, (x, y) => {
+        input.moveVec.x = x; input.moveVec.y = y;
+      });
+
+      setupJoystick(joystickAim, (x, y, active) => {
+        input.aimVec.x = x; input.aimVec.y = y;
+        input.autoFire = active && (Math.abs(x) + Math.abs(y)) > 0.15;
+      });
+
+      function update(dt) {
+        if (state !== 'playing' || isPaused) return;
+        const p = game.player;
+        if (!p) return;
+
+        p.damageCooldown = Math.max(0, p.damageCooldown - dt);
+        p.fireCooldown = Math.max(0, p.fireCooldown - dt);
+
+        let mvx = 0, mvy = 0;
+        if (input.keys.has('up')) mvy -= 1;
+        if (input.keys.has('down')) mvy += 1;
+        if (input.keys.has('left')) mvx -= 1;
+        if (input.keys.has('right')) mvx += 1;
+        mvx += input.moveVec.x;
+        mvy += input.moveVec.y;
+        const m = norm(mvx, mvy);
+        const speed = p.speed;
+        p.x += m.x * speed * dt * DPR;
+        p.y += m.y * speed * dt * DPR;
+        p.x = clamp(p.x, p.r, game.width - p.r);
+        p.y = clamp(p.y, p.r, game.height - p.r);
+
+        let aimX = input.mouse.x - p.x;
+        let aimY = input.mouse.y - p.y;
+        if (Math.abs(input.aimVec.x) + Math.abs(input.aimVec.y) > 0.01) {
+          aimX = input.aimVec.x;
+          aimY = input.aimVec.y;
+        }
+        const aim = norm(aimX, aimY);
+        p.angle = Math.atan2(aim.y, aim.x);
+
+        const wantFire = input.mouse.down || input.keys.has('shoot') || input.autoFire;
+        if (wantFire && p.fireCooldown <= 0) {
+          shootBullet(p.x + Math.cos(p.angle) * (p.r + 4), p.y + Math.sin(p.angle) * (p.r + 4), p.angle);
+          p.fireCooldown = 1 / p.fireRate;
+        }
+
+        for (let i = game.bullets.length - 1; i >= 0; i--) {
+          const b = game.bullets[i];
+          b.x += b.vx * dt * DPR;
+          b.y += b.vy * dt * DPR;
+          b.life -= dt;
+          if (b.x < -10 || b.y < -10 || b.x > game.width + 10 || b.y > game.height + 10 || b.life <= 0) {
+            game.bullets.splice(i, 1);
+          }
+        }
+
+        for (let i = game.zombies.length - 1; i >= 0; i--) {
+          const z = game.zombies[i];
+          const dx = p.x - z.x;
+          const dy = p.y - z.y;
+          const d = norm(dx, dy);
+          z.x += d.x * z.speed * dt * DPR;
+          z.y += d.y * z.speed * dt * DPR;
+
+          for (let j = game.bullets.length - 1; j >= 0; j--) {
+            const b = game.bullets[j];
+            const ddx = b.x - z.x;
+            const ddy = b.y - z.y;
+            const rr = z.r + 4;
+            if (ddx * ddx + ddy * ddy <= rr * rr) {
+              z.hp -= 34;
+              game.bullets.splice(j, 1);
+              if (z.hp <= 0) {
+                game.zombies.splice(i, 1);
+                game.score += 10;
+              }
+              break;
+            }
+          }
+
+          const pdx = p.x - z.x;
+          const pdy = p.y - z.y;
+          const pr = p.r + z.r;
+          if (pdx * pdx + pdy * pdy <= pr * pr) {
+            if (p.damageCooldown <= 0) {
+              p.health -= 15;
+              p.damageCooldown = 0.7;
+              if (p.health <= 0) {
+                p.health = 0;
+                gameOver();
+                break;
+              }
+            }
+          }
+        }
+
+        game.spawnTimer += dt;
+        game.difficultyTimer += dt;
+        if (game.spawnTimer >= game.spawnInterval) {
+          game.spawnTimer = 0;
+          spawnZombie();
+        }
+        if (game.difficultyTimer >= 4.0) {
+          game.difficultyTimer = 0;
+          game.spawnInterval = Math.max(game.minSpawn, game.spawnInterval * 0.92);
+        }
+
+        hudScore.textContent = String(game.score);
+        hudHealth.textContent = String(Math.round(game.player.health));
+      }
+
+      function shootBullet(x, y, angle) {
+        const speed = 540;
+        game.bullets.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1.2 });
+      }
+
+      function spawnZombie() {
+        const edge = Math.floor(Math.random() * 4);
+        const margin = 40 * DPR;
+        let x = 0, y = 0;
+        if (edge === 0) { x = rand(-margin, 0); y = rand(0, game.height); }
+        else if (edge === 1) { x = rand(game.width, game.width + margin); y = rand(0, game.height); }
+        else if (edge === 2) { x = rand(0, game.width); y = rand(-margin, 0); }
+        else { x = rand(0, game.width); y = rand(game.height, game.height + margin); }
+        const speed = rand(40, 85);
+        const r = rand(10, 16);
+        const hp = Math.round(rand(60, 120));
+        game.zombies.push({ x, y, r, speed, hp });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, game.width, game.height);
+        if (state === 'menu') {
+          drawCenteredTitle('Zombi Kaçışı');
+        }
+        if (state === 'playing' || state === 'gameover') {
+          drawWorld();
+        }
+      }
+
+      function drawWorld() {
+        const p = game.player;
+        if (!p) return;
+
+        for (let i = 0; i < game.zombies.length; i++) {
+          const z = game.zombies[i];
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(111, 228, 120, 0.95)';
+          ctx.arc(z.x, z.y, z.r, 0, Math.PI * 2);
+          ctx.fill();
+          const hpw = clamp(z.hp / 120, 0, 1);
+          if (hpw < 1) {
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.fillRect(z.x - z.r, z.y - z.r - 8, z.r * 2, 4);
+            ctx.fillStyle = 'rgba(111, 228, 120, 0.9)';
+            ctx.fillRect(z.x - z.r, z.y - z.r - 8, (z.r * 2) * hpw, 4);
+          }
+        }
+
+        ctx.fillStyle = '#fffd';
+        for (let i = 0; i < game.bullets.length; i++) {
+          const b = game.bullets[i];
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = '#d9e7ff';
+        ctx.beginPath();
+        ctx.moveTo(14, 0);
+        ctx.lineTo(-12, -10);
+        ctx.lineTo(-6, 0);
+        ctx.lineTo(-12, 10);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawCenteredTitle(text) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 72px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+        ctx.fillText(text, game.width / 2, game.height / 2);
+        ctx.restore();
+      }
+
+      function loop(ts) {
+        game.now = ts * 0.001;
+        game.dt = Math.min(0.033, game.now - game.last);
+        game.last = game.now;
+
+        if (!isPaused) update(game.dt);
+        draw();
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>
