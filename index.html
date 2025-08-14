@@ -10,10 +10,10 @@
       --bg-start: #0f1226;
       --bg-end: #0b1736;
       --text: #eef2ff;
-      --muted: #b8c1ec;
+      --muted: #c6ceff;
       --accent: #6c8cff;
-      --glass: rgba(255, 255, 255, 0.08);
-      --glass-strong: rgba(255, 255, 255, 0.14);
+      --glass: rgba(10, 12, 28, 0.46);
+      --glass-strong: rgba(8, 10, 26, 0.82); /* okunabilirlik için daha opak */
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
       --radius: 14px;
     }
@@ -50,35 +50,60 @@
       cursor: pointer;
     }
 
-    /* HUD (Skor/Seviye/En İyi) */
+    /* HUD (Skor/Seviye/En İyi) - Daha belirgin ve modern */
     .hud {
       position: absolute;
       top: env(safe-area-inset-top, 12px);
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
-      background: var(--glass);
+      background: linear-gradient(180deg, rgba(12,14,34,0.8), rgba(8,10,28,0.66));
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px;
-      padding: 8px 14px;
-      box-shadow: var(--shadow);
+      padding: 10px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
       user-select: none;
       z-index: 10;
     }
     .stat {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
+      display: grid;
+      grid-template-columns: auto;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.06);
+      position: relative;
+      min-width: 92px;
+      text-align: center;
     }
-    .stat span { color: var(--muted); font-size: 12px; letter-spacing: 0.3px; }
-    .stat strong { font-size: 16px; font-weight: 700; }
+    .stat span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stat strong {
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .stat::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      opacity: 0.9;
+    }
+    .stat.score::before { background: linear-gradient(180deg, #ff8585, #ff4d4d); }
+    .stat.level::before { background: linear-gradient(180deg, #ffd98a, #ffb800); }
+    .stat.best::before  { background: linear-gradient(180deg, #84a1ff, #5a74ff); }
 
     /* Başlangıç ve Oyun Bitti panelleri */
     .overlay {
@@ -89,22 +114,26 @@
       justify-content: center;
       z-index: 20;
       pointer-events: none; /* butonlar dışında */
+      padding: 20px;
     }
     .overlay-inner {
       pointer-events: auto;
       width: min(92vw, 560px);
       background: var(--glass-strong);
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
       border-radius: var(--radius);
       padding: 22px 20px;
       box-shadow: var(--shadow);
       text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     h1 {
-      margin: 0 0 6px 0;
+      margin: 0 0 8px 0;
       font-size: clamp(26px, 4vw, 36px);
       letter-spacing: 0.4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.35);
     }
     .subtitle {
       margin: 0 0 14px 0;
@@ -113,11 +142,12 @@
     }
     .help {
       text-align: left;
-      margin: 10px auto 18px auto;
+      margin: 12px auto 18px auto;
       padding-left: 18px;
-      color: var(--muted);
+      color: #e8ecff;
       max-width: 520px;
-      line-height: 1.5;
+      line-height: 1.6;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.35);
     }
 
     .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -133,13 +163,21 @@
       color: white;
       box-shadow: 0 10px 20px rgba(90, 116, 255, 0.35);
       cursor: pointer;
-      transition: transform 120ms ease, filter 120ms ease;
+      transition: transform 120ms ease, filter 120ms ease, opacity 120ms ease;
       min-width: 160px;
     }
     .btn.secondary { background: linear-gradient(180deg, #2c2f48, #232742); box-shadow: 0 8px 16px rgba(0,0,0,0.35); }
+    .btn.ghost { background: transparent; border: 1px solid rgba(255,255,255,0.22); box-shadow: none; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
     .btn:active { transform: translateY(1px) scale(0.99); filter: brightness(0.98); }
 
     .hidden { display: none; }
+
+    /* Test reklam (mock) overlay */
+    .ad-body { display: grid; gap: 12px; margin: 12px 0 6px 0; }
+    .ad-progress { width: 100%; height: 10px; background: rgba(255,255,255,0.14); border-radius: 999px; overflow: hidden; }
+    .ad-progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #7a93ff, #5a74ff); transition: width 100ms linear; }
+    .ad-count { font-variant-numeric: tabular-nums; letter-spacing: 0.06em; color: #e8ecff; }
   </style>
 </head>
 <body>
@@ -149,9 +187,9 @@
 
     <!-- HUD: Skor/Seviye/En İyi -->
     <div class="hud" id="hud">
-      <div class="stat"><span>Skor</span><strong id="score">0</strong></div>
-      <div class="stat"><span>Seviye</span><strong id="level">1</strong></div>
-      <div class="stat"><span>En iyi</span><strong id="best">0</strong></div>
+      <div class="stat score"><span>Skor</span><strong id="score">0</strong></div>
+      <div class="stat level"><span>Seviye</span><strong id="level">1</strong></div>
+      <div class="stat best"><span>En iyi</span><strong id="best">0</strong></div>
     </div>
 
     <!-- Başlangıç ekranı -->
@@ -178,7 +216,7 @@
     <div class="overlay hidden" id="gameOverOverlay">
       <div class="overlay-inner">
         <h1>Oyun Bitti</h1>
-        <p class="subtitle">Harika bir denemeydi!</p>
+        <p class="subtitle">Reklam izleyerek kaldığın yerden devam edebilirsin.</p>
         <div class="btn-row" style="margin-top: 8px; margin-bottom: 12px;">
           <div class="stat" style="background: rgba(255,255,255,0.08);">
             <span>Skor</span><strong id="finalScore">0</strong>
@@ -188,8 +226,25 @@
           </div>
         </div>
         <div class="btn-row">
+          <button id="rewardBtn" class="btn" title="Test reklamını izle ve devam et">Reklam İzle ve Devam Et</button>
           <button id="retryBtn" class="btn">Tekrar Oyna</button>
           <button id="menuBtn" class="btn secondary">Menü</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test (Mock) Reklam overlay -->
+    <div class="overlay hidden" id="adOverlay">
+      <div class="overlay-inner">
+        <h1>Reklam Oynatılıyor (Test)</h1>
+        <p class="subtitle">Ödülü kazanmak için reklam bitene kadar bekle.</p>
+        <div class="ad-body">
+          <div class="ad-progress"><div class="ad-progress-fill" id="adProgressFill"></div></div>
+          <div class="ad-count">Kalan: <strong id="adCountdown">5</strong> sn</div>
+        </div>
+        <div class="btn-row">
+          <button id="adCloseBtn" class="btn hidden">Devam Et</button>
+          <button id="adCancelBtn" class="btn ghost">İptal</button>
         </div>
       </div>
     </div>
@@ -205,6 +260,10 @@
       "#4da3ff", // Mavi
       "#4dff88"  // Yeşil
     ];
+
+    // --- Reklam sabitleri ---
+    // Android için AdMob Rewarded test placement: https://developers.google.com/admob/android/rewarded?hl=tr
+    const TEST_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917";
 
     // --- DOM referansları ---
     const canvas = document.getElementById("game");
@@ -222,6 +281,13 @@
     const finalBest = document.getElementById("finalBest");
     const retryBtn = document.getElementById("retryBtn");
     const menuBtn = document.getElementById("menuBtn");
+    const rewardBtn = document.getElementById("rewardBtn");
+
+    const adOverlay = document.getElementById("adOverlay");
+    const adCountdown = document.getElementById("adCountdown");
+    const adProgressFill = document.getElementById("adProgressFill");
+    const adCloseBtn = document.getElementById("adCloseBtn");
+    const adCancelBtn = document.getElementById("adCancelBtn");
 
     // --- Oyun durumu ---
     const BEST_KEY = "colorTapBestScore";
@@ -230,7 +296,10 @@
       score: 0,
       best: Number(localStorage.getItem(BEST_KEY) || 0),
       level: 1,
-      pointsPerLevel: 6 // seviyeye geçiş eşiği
+      pointsPerLevel: 6, // seviyeye geçiş eşiği
+      continuesUsed: 0,
+      maxContinues: 1,
+      pendingContinue: null // { cause: 'mismatch'|'missed', ballColor?: number }
     };
 
     // --- Boyutlar ve responsive ---
@@ -260,7 +329,6 @@
     // --- Yardımcı fonksiyonlar ---
     function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
     function mod(a, n) { return ((a % n) + n) % n; }
-    function lerp(a, b, t) { return a + (b - a) * t; }
 
     function updateHud() {
       hudScore.textContent = String(state.score);
@@ -279,6 +347,8 @@
       } else if (name === "over") {
         startOverlay.classList.add("hidden");
         gameOverOverlay.classList.remove("hidden");
+        // devam hakkı varsa butonu göster
+        rewardBtn.classList.toggle("hidden", !(state.continuesUsed < state.maxContinues));
       }
     }
 
@@ -321,6 +391,8 @@
     function startGame() {
       state.score = 0;
       state.level = 1;
+      state.continuesUsed = 0;
+      state.pendingContinue = null;
       updateHud();
       recomputeSpeeds();
 
@@ -330,6 +402,17 @@
 
       resetBall();
       setScreen("playing");
+    }
+
+    function triggerGameOver(cause) {
+      // cause: 'mismatch' | 'missed'
+      state.pendingContinue = null;
+      if (cause === "mismatch") {
+        state.pendingContinue = { cause: "mismatch", ballColor: ball.colorIndex };
+      } else if (cause === "missed") {
+        state.pendingContinue = { cause: "missed" };
+      }
+      gameOver();
     }
 
     function gameOver() {
@@ -501,14 +584,14 @@
           } else {
             // Yanlış eşleşme -> oyun bitti
             ball.active = false;
-            gameOver();
+            triggerGameOver("mismatch");
           }
         }
 
         // Top ekranı geçtiyse (kaçırıldı) yine oyun biter
         if (ball.y - ball.radius > canvas.getBoundingClientRect().height + 10) {
           ball.active = false;
-          gameOver();
+          triggerGameOver("missed");
         }
       }
     }
@@ -530,11 +613,115 @@
       requestAnimationFrame(loop);
     }
 
+    // --- Reklam entegrasyonu ---
+    function hasNativeRewardedBridge() {
+      return typeof window.AndroidRewardedAds === "object" &&
+             typeof window.AndroidRewardedAds.showRewardedAd === "function";
+    }
+
+    function showRewardedAd() {
+      return new Promise((resolve, reject) => {
+        // Android WebView köprüsü varsa onu kullan
+        if (hasNativeRewardedBridge()) {
+          try {
+            // Native tarafın çağırması için global callback'ler
+            window.__admobRewardResolve = () => { resolve(true); cleanup(); };
+            window.__admobRewardReject = (msg) => { reject(new Error(msg || "Ad failed")); cleanup(); };
+            window.__admobAdClosed = () => { /* kapandı ama ödül yoksa reject etme */ };
+            function cleanup() {
+              setTimeout(() => {
+                delete window.__admobRewardResolve;
+                delete window.__admobRewardReject;
+                delete window.__admobAdClosed;
+              }, 0);
+            }
+            // Test reklam birimi ile göster
+            window.AndroidRewardedAds.showRewardedAd(TEST_AD_UNIT_ID);
+            return;
+          } catch (e) {
+            // köprü hatasında mock'a düş
+          }
+        }
+        // Web ortamı için test (mock) reklam
+        runMockAd().then(() => resolve(true)).catch(reject);
+      });
+    }
+
+    let mockTimer = null;
+    function runMockAd(durationSec = 5) {
+      return new Promise((resolve, reject) => {
+        let t = durationSec;
+        adCountdown.textContent = String(t);
+        adProgressFill.style.width = "0%";
+        adCloseBtn.classList.add("hidden");
+        adOverlay.classList.remove("hidden");
+
+        const total = durationSec;
+        mockTimer = setInterval(() => {
+          t -= 1;
+          const progress = clamp(1 - (t / total), 0, 1);
+          adProgressFill.style.width = (progress * 100).toFixed(1) + "%";
+          adCountdown.textContent = String(Math.max(0, t));
+          if (t <= 0) {
+            clearInterval(mockTimer);
+            mockTimer = null;
+            // Ödül kazanıldı, kapat tuşunu aktif et
+            adCloseBtn.classList.remove("hidden");
+            adCloseBtn.focus({ preventScroll: true });
+          }
+        }, 1000);
+
+        function cleanup() {
+          if (mockTimer) { clearInterval(mockTimer); mockTimer = null; }
+          adOverlay.classList.add("hidden");
+        }
+
+        adCloseBtn.onclick = () => { cleanup(); resolve(true); };
+        adCancelBtn.onclick = () => { cleanup(); reject(new Error("Ad cancelled")); };
+      });
+    }
+
+    // Native (Android) tarafın çağırabileceği fonksiyon isimleri
+    // Örn. rewarded kullanıcı ödülü aldığı anda: window.__admobRewardResolve()
+    window.admobRewardEarned = function () { if (window.__admobRewardResolve) window.__admobRewardResolve(); };
+    window.admobRewardFailed = function (msg) { if (window.__admobRewardReject) window.__admobRewardReject(msg); };
+    window.admobAdClosed = function () { if (window.__admobAdClosed) window.__admobAdClosed(); };
+
+    async function tryContinueWithReward() {
+      if (state.continuesUsed >= state.maxContinues) return;
+      rewardBtn.disabled = true;
+      try {
+        await showRewardedAd();
+        continueFromPending();
+      } catch (e) {
+        // kullanıcı iptal veya hata
+      } finally {
+        rewardBtn.disabled = false;
+      }
+    }
+
+    function continueFromPending() {
+      if (!state.pendingContinue) return;
+      state.continuesUsed += 1;
+      setScreen("playing");
+
+      // Devam senaryosu
+      if (state.pendingContinue.cause === "mismatch") {
+        ball.colorIndex = state.pendingContinue.ballColor ?? Math.floor(Math.random() * 4);
+        ball.y = getHitLineY() - ball.radius * 3; // çarpışma çizgisinin biraz üstü
+        ball.prevY = ball.y - 1;
+        ball.active = true;
+      } else {
+        resetBall();
+      }
+
+      state.pendingContinue = null;
+    }
+
     // --- Etkinlikler ---
     function onPrimaryAction(e) {
       // Ekrana dokunma/tıklama -> çevir veya başlat/yeniden başlat
       if (e) {
-        // iOS Safari dokunma yankısını azalt
         if (typeof e.preventDefault === "function") e.preventDefault();
       }
 
@@ -560,13 +747,14 @@
       }
     }, { passive: false });
 
-    // Başla / Tekrar / Menü butonları
+    // Başla / Tekrar / Menü / Reklam butonları
     startBtn.addEventListener("click", (e) => { e.preventDefault(); onPrimaryAction(e); });
     retryBtn.addEventListener("click", (e) => { e.preventDefault(); onPrimaryAction(e); });
     menuBtn.addEventListener("click", (e) => {
       e.preventDefault();
       setScreen("start");
     });
+    rewardBtn.addEventListener("click", (e) => { e.preventDefault(); tryContinueWithReward(); });
 
     // Boyut değişimi
     window.addEventListener("resize", resize);
