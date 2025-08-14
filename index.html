@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f1a" />
+  <title>Zombi Kaçışı - Zombie Survival</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/workspace/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="hud" aria-live="polite">
+      <div class="hud-left">
+        <div class="hud-item"><span>Skor:</span> <strong id="score">0</strong></div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-item"><span>Can:</span> <strong id="health">100</strong></div>
+        <button id="pause-btn" class="btn ghost" aria-label="Duraklat">II</button>
+      </div>
+    </div>
+
+    <div id="menu" class="overlay visible" role="dialog" aria-modal="true">
+      <div class="panel">
+        <h1>Zombi Kaçışı</h1>
+        <p>Hayatta kal, zombileri yok et ve en yüksek skoru yap!</p>
+        <ul class="hint">
+          <li><strong>PC</strong>: WASD / Oklar ile hareket, fare ile nişan, tıkla ve basılı tutarak ateş et.</li>
+          <li><strong>Mobil</strong>: Sol joystick ile hareket, sağ joystick ile nişan ve ateş.</li>
+        </ul>
+        <button id="play-btn" class="btn primary">Oyuna Başla</button>
+      </div>
+    </div>
+
+    <div id="gameover" class="overlay" role="dialog" aria-modal="true">
+      <div class="panel">
+        <h2>Oyun Bitti</h2>
+        <p>Skorun: <strong id="final-score">0</strong></p>
+        <div class="actions">
+          <button id="restart-btn" class="btn primary">Yeniden Oyna</button>
+          <button id="menu-btn" class="btn">Menü</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="controls">
+      <div id="joystick-move" class="joystick" aria-label="Hareket Joystick" role="application">
+        <div class="stick"></div>
+      </div>
+      <div id="joystick-aim" class="joystick" aria-label="Nişan/Ateş Joystick" role="application">
+        <div class="stick"></div>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="/workspace/game.js"></script>
+</body>
+</html>
