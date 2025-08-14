@@ -210,11 +210,18 @@
 
     .separator { height: 1px; background: #eef2f7; margin: 8px 0; }
 
+    /* Answer animations */
+    .correct-answer { animation: pulse-green 1s; }
+    .incorrect-answer { animation: shake-red 0.5s; }
+    @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(62, 207, 142, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(62, 207, 142, 0); } 100% { box-shadow: 0 0 0 0 rgba(62, 207, 142, 0); } }
+    @keyframes shake-red { 0%,100% { transform: translateX(0); } 10%,30%,50%,70%,90% { transform: translateX(-6px); } 20%,40%,60%,80% { transform: translateX(6px); } }
+
     @media (min-width: 680px) {
       .answers button { font-size: 18px; }
       .question { font-size: 20px; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 </head>
 <body>
   <div class="container">
@@ -523,6 +530,8 @@
       });
 
       if (index === q.correct) {
+        const nodes = Array.from(dom.q.answers.children);
+        if (nodes[index]) nodes[index].classList.add('correct-answer');
         state.score += 10;
         state.coins += 1;
         state.correctStreak += 1;
@@ -534,7 +543,8 @@
         if (state.correctStreak >= 3) unlockBadge('streak3');
         playCorrect();
       } else {
-        nodes[index].classList.add('wrong');
+        nodes[index].classList.add('wrong', 'incorrect-answer');
+        const correctNode = nodes[q.correct]; if (correctNode) correctNode.classList.add('correct-answer');
         state.correctStreak = 0;
         playWrong();
         dom.q.explanation.textContent = `Doğrusu: ${q.choices[q.correct]} • ${q.exp}`;
@@ -709,8 +719,30 @@
       } catch {}
     }
 
-    function playCorrect() { playTone(880, 0.12); setTimeout(() => playTone(1320, 0.12), 120); }
-    function playWrong() { playTone(180, 0.18); setTimeout(() => playTone(140, 0.18), 160); }
+    // Tone.js ses kurulum
+    let toneReady = false;
+    let synthCorrect = null;
+    let synthWrong = null;
+    async function ensureToneStarted() {
+      try {
+        if (toneReady) return;
+        if (window.Tone && Tone.start) {
+          await Tone.start();
+          synthCorrect = synthCorrect || new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+          synthWrong = synthWrong || new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.4, sustain: 0, release: 0.4 } }).toDestination();
+          toneReady = true;
+        }
+      } catch {}
+    }
+
+    function playCorrect() {
+      if (window.Tone) { ensureToneStarted(); try { synthCorrect && synthCorrect.triggerAttackRelease('C5', '0.5s', Tone.now()); } catch {} return; }
+      playTone(880, 0.12); setTimeout(() => playTone(1320, 0.12), 120);
+    }
+    function playWrong() {
+      if (window.Tone) { ensureToneStarted(); try { synthWrong && synthWrong.triggerAttackRelease('C3', '0.5s', Tone.now()); } catch {} return; }
+      playTone(180, 0.18); setTimeout(() => playTone(140, 0.18), 160);
+    }
 
     function playTone(freq, duration) {
       try {
@@ -791,6 +823,7 @@
       setupDomRefs();
       bindEvents();
       loadProgress();
+      ['click','touchstart','keydown'].forEach(ev=>document.addEventListener(ev, ()=>ensureToneStarted(), { once: true, passive: true }));
       renderStartBadges();
       document.addEventListener('visibilitychange', () => { if (document.hidden) saveProgress(); });
       // Load Firebase SDKs lazily
