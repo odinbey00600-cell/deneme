@@ -961,6 +961,13 @@
       if (shareHistory.length > 50) shareHistory.shift();
     }
 
+    function destroyFXCharts() {
+      ['USD','EUR','XAU'].forEach(sym=>{
+        const id = 'fxChart_' + sym;
+        if (charts[id]) { try { charts[id].destroy(); } catch(_) {} delete charts[id]; }
+      });
+    }
+
     function initMiniChart(canvasId, sym) {
       try {
         const ctx = document.getElementById(canvasId);
@@ -1419,6 +1426,7 @@
 
     function renderFXPanels(panels) {
       const fx = state.bank.fx;
+      destroyFXCharts();
       ['USD','EUR','XAU'].forEach(sym=>{
         const x = fx[sym];
         const it = document.createElement('div'); it.className='item';
