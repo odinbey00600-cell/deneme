@@ -704,8 +704,72 @@
     }
 
     // ---------- Core Mechanics ----------
-    function levelThreshold(lv) { return 100 * Math.pow(2, lv-1); }
-    function perClickBase(lv) { return 0.5 * Math.pow(2, lv-1); }
+    // Economy anchors (levels 1–200)
+    const LEVEL_ANCHORS = [
+      {lvl:1, v:100},
+      {lvl:50, v:100_000},
+      {lvl:51, v:120_000},
+      {lvl:55, v:200_000},
+      {lvl:60, v:500_000},
+      {lvl:65, v:800_000},
+      {lvl:70, v:1_500_000},
+      {lvl:75, v:3_000_000},
+      {lvl:80, v:5_000_000},
+      {lvl:85, v:8_000_000},
+      {lvl:90, v:12_000_000},
+      {lvl:95, v:20_000_000},
+      {lvl:100, v:30_000_000},
+      {lvl:110, v:50_000_000},
+      {lvl:120, v:80_000_000},
+      {lvl:130, v:120_000_000},
+      {lvl:140, v:200_000_000},
+      {lvl:150, v:300_000_000},
+      {lvl:160, v:500_000_000},
+      {lvl:170, v:800_000_000},
+      {lvl:180, v:1_200_000_000},
+      {lvl:190, v:2_000_000_000},
+      {lvl:200, v:3_000_000_000}
+    ];
+    const CLICK_ANCHORS = [
+      {lvl:1, v:1},
+      {lvl:50, v:1_000},
+      {lvl:51, v:1_200},
+      {lvl:55, v:1_500},
+      {lvl:60, v:2_000},
+      {lvl:65, v:2_500},
+      {lvl:70, v:3_000},
+      {lvl:75, v:4_000},
+      {lvl:80, v:5_000},
+      {lvl:85, v:6_500},
+      {lvl:90, v:8_000},
+      {lvl:95, v:10_000},
+      {lvl:100, v:12_000},
+      {lvl:110, v:15_000},
+      {lvl:120, v:20_000},
+      {lvl:130, v:25_000},
+      {lvl:140, v:30_000},
+      {lvl:150, v:40_000},
+      {lvl:160, v:50_000},
+      {lvl:170, v:65_000},
+      {lvl:180, v:80_000},
+      {lvl:190, v:100_000},
+      {lvl:200, v:120_000}
+    ];
+    function interpAnchors(anchors, lvl) {
+      const L = Math.max(1, Math.min(200, Math.floor(lvl)));
+      let prev = anchors[0], next = anchors[anchors.length-1];
+      for (let i=0;i<anchors.length;i++) {
+        if (anchors[i].lvl === L) return anchors[i].v;
+        if (anchors[i].lvl < L) prev = anchors[i];
+        if (anchors[i].lvl > L) { next = anchors[i]; break; }
+      }
+      if (!next || next.lvl===prev.lvl) return prev.v;
+      const t = (L - prev.lvl) / (next.lvl - prev.lvl);
+      // geometric interpolation
+      return prev.v * Math.pow(next.v/prev.v, t);
+    }
+    function levelThreshold(lv) { return Math.round(interpAnchors(LEVEL_ANCHORS, lv)); }
+    function perClickBase(lv) { return interpAnchors(CLICK_ANCHORS, lv); }
 
     function globalMultiplier() {
       let m = 1;
@@ -1036,22 +1100,22 @@
       qs('#balance').textContent = formatMoney(state.balance);
       qs('#level').textContent = nf.format(state.level);
       const ps = perSecondIncome();
-      qs('#perSecond').textContent = formatMoney(ps);
-      qs('#statIncome').textContent = formatMoney(ps);
-      qs('#statClicks').textContent = nf.format(state.clicks);
-      qs('#statTotal').textContent = formatMoney(state.totalEarned);
+      qs('#perSecond').textContent = formatShort(ps) + '₺';
+      qs('#statIncome').textContent = formatShort(ps) + '₺';
+      qs('#statClicks').textContent = formatShort(state.clicks);
+      qs('#statTotal').textContent = formatShort(state.totalEarned) + '₺';
       qs('#btnSave').textContent = t('Save');
       qs('#btnReset').textContent = t('ResetGame');
     }
 
     function renderClicker() {
       const pc = perClickBase(state.level) * clickMultiplier();
-      qs('#tapBtn').textContent = `${t('Tap')} ${nfTRY.format(pc)}`;
+      qs('#tapBtn').textContent = `${t('Tap')} ${formatShort(pc)}₺`;
       const need = levelThreshold(state.level);
       const prog = clamp((state.clicks / need) * 100, 0, 100);
       qs('#levelBar').style.width = prog + '%';
-      qs('#levelText').textContent = `Lv${state.level} • ${nf.format(state.clicks)} / ${nf.format(need)}`;
-      qs('#levelNext').textContent = `+${nfTRY.format(perClickBase(state.level))}`;
+      qs('#levelText').textContent = `Lv${state.level} • ${formatShort(state.clicks)} / ${formatShort(need)}`;
+      qs('#levelNext').textContent = `+${formatShort(perClickBase(state.level))}₺`;
     }
 
     function renderGiftsAds() {
