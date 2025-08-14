@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0d1b2a">
   <title>Turkey Tycoon</title>
   <link rel="icon" href="data:,">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --bg: #0b1320;
@@ -937,6 +938,50 @@
         s.lastDividendAt = now();
         toast('🏦 +' + formatMoney(div));
       }
+      // push history for charts
+      pushPriceHistory('USD', f.USD.price);
+      pushPriceHistory('EUR', f.EUR.price);
+      pushPriceHistory('XAU', f.XAU.price);
+      pushShareHistory(s.price);
+      updateMiniCharts();
+    }
+
+    // ----- Chart helpers -----
+    const fxHistory = { USD: [], EUR: [], XAU: [] };
+    let shareHistory = [];
+    const charts = {};
+
+    function pushPriceHistory(sym, price) {
+      const arr = fxHistory[sym]; if (!arr) return;
+      arr.push({ t: now(), p: price });
+      if (arr.length > 50) arr.shift();
+    }
+    function pushShareHistory(price) {
+      shareHistory.push({ t: now(), p: price });
+      if (shareHistory.length > 50) shareHistory.shift();
+    }
+
+    function initMiniChart(canvasId, sym) {
+      try {
+        const ctx = document.getElementById(canvasId);
+        if (!ctx || charts[canvasId]) return;
+        charts[canvasId] = new Chart(ctx, {
+          type: 'line',
+          data: { labels: [], datasets: [{ label: sym + ' Price', data: [], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.15)', tension: 0.25, pointRadius: 0 }] },
+          options: { responsive: true, animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
+        });
+      } catch(e) {/* ignore */}
+    }
+
+    function updateMiniCharts() {
+      Object.entries(fxHistory).forEach(([sym, arr])=>{
+        const id = 'fxChart_' + sym;
+        const chart = charts[id]; if (!chart) return;
+        chart.data.labels = arr.map(x=> new Date(x.t).toLocaleTimeString());
+        chart.data.datasets[0].data = arr.map(x=> x.p);
+        chart.update();
+      });
+      // shares chart if added later
     }
 
     // Prestige
@@ -1364,10 +1409,14 @@
         const it = document.createElement('div'); it.className='item';
         const avg = x.holding>0 ? x.costBasis/x.holding : 0;
         const pl = x.holding>0 ? (x.price - avg) * x.holding : 0;
+        const chartId = `fxChart_${sym}`;
         it.innerHTML = `
           <div class="row space"><div class="h">${sym}</div><div class="pill">${t('Holding')}: ${x.holding.toFixed(3)}</div></div>
           <div class="meta"><div>${t('Price')}: <b>₺${x.price.toFixed(2)}</b> • Avg: <b>₺${avg.toFixed(2)}</b> • P/L: <b>${formatMoney(pl)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
-          <div class="two">
+          <div style="background:#0f1a2b;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;">
+            <canvas id="${chartId}" height="140"></canvas>
+          </div>
+          <div class="two" style="margin-top:8px;">
             <div>
               <label>${t('Amount')}</label>
               <input type="number" inputmode="decimal" min="0" step="0.001" id="fxAmt_${sym}">
@@ -1380,6 +1429,8 @@
           </div>
         `;
         panels.appendChild(it);
+        // init chart if not exists
+        setTimeout(()=> initMiniChart(chartId, sym), 0);
       });
       qsa('[data-fx]').forEach(btn=> btn.onclick = ()=>{
         const sym = btn.getAttribute('data-fx');
@@ -1394,7 +1445,6 @@
           if (!(amt>0)) return;
           const sellQty = Math.min(amt, x.holding);
           const proceeds = sellQty * x.price;
-          // reduce cost basis proportionally
           const ratio = x.holding>0 ? (sellQty/x.holding) : 0;
           x.costBasis = Math.max(0, x.costBasis - x.costBasis*ratio);
           x.holding = Math.max(0, x.holding-sellQty);
