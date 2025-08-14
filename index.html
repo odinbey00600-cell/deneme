@@ -24,7 +24,7 @@
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; overflow-x: hidden; }
 
     /* Layout */
     .app { min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; }
@@ -260,11 +260,11 @@
       <!-- Investments Screen -->
       <section class="screens" id="screen-investments">
         <div class="subtabs" id="invTabs">
-          <button class="subtab active" data-subtab="main">${t('Investments')}</button>
-          <button class="subtab" data-subtab="stocks">${t('Stocks')}</button>
-          <button class="subtab" data-subtab="crypto">${t('Crypto')}</button>
-          <button class="subtab" data-subtab="startups">${t('Startups')}</button>
-          <button class="subtab" data-subtab="lottery">${t('Lottery')}</button>
+          <button class="subtab active" data-subtab="main">Yatırımlar</button>
+          <button class="subtab" data-subtab="stocks">Hisseler</button>
+          <button class="subtab" data-subtab="crypto">Kripto</button>
+          <button class="subtab" data-subtab="startups">Girişimler</button>
+          <button class="subtab" data-subtab="lottery">Loto</button>
         </div>
 
         <div class="list" id="invPanels"></div>
