@@ -260,10 +260,11 @@
       <!-- Investments Screen -->
       <section class="screens" id="screen-investments">
         <div class="subtabs" id="invTabs">
-          <button class="subtab active" data-subtab="bank">Banka</button>
-          <button class="subtab" data-subtab="fx">Döviz/Altın</button>
-          <button class="subtab" data-subtab="shares">Hisseler</button>
-          <button class="subtab" data-subtab="rnd">Ar-Ge</button>
+          <button class="subtab active" data-subtab="main">${t('Investments')}</button>
+          <button class="subtab" data-subtab="stocks">${t('Stocks')}</button>
+          <button class="subtab" data-subtab="crypto">${t('Crypto')}</button>
+          <button class="subtab" data-subtab="startups">${t('Startups')}</button>
+          <button class="subtab" data-subtab="lottery">${t('Lottery')}</button>
         </div>
 
         <div class="list" id="invPanels"></div>
@@ -397,6 +398,19 @@
         Home: "Ana Menü",
         Businesses: "İşletmeler",
         Investments: "Yatırımlar",
+        InvestNow: "Yatırım Yap",
+        CurrentValue: "Mevcut Değer",
+        TotalPL: "Toplam P/L",
+        MyInvestments: "Yatırımlarım",
+        Stocks: "Hisseler",
+        Crypto: "Kripto",
+        Startups: "Girişimler",
+        Lottery: "Loto",
+        Back: "Geri",
+        Wallet: "Cüzdan",
+        Avg: "Ort.",
+        Change: "Değişim",
+        Max: "Maks",
         Market: "Market",
         Profile: "Profil",
         Homes: "Evler",
@@ -496,6 +510,19 @@
         Home: "Home",
         Businesses: "Businesses",
         Investments: "Investments",
+        InvestNow: "Invest Now",
+        CurrentValue: "Current Value",
+        TotalPL: "Total P/L",
+        MyInvestments: "My Investments",
+        Stocks: "Stocks",
+        Crypto: "Crypto",
+        Startups: "Startups",
+        Lottery: "Lottery",
+        Back: "Back",
+        Wallet: "Wallet",
+        Avg: "Avg",
+        Change: "Change",
+        Max: "Max",
         Market: "Market",
         Profile: "Profile",
         Homes: "Homes",
@@ -636,15 +663,29 @@
             { id:'ankara', nameTR:'Ankara SK', nameEN:'Ankara SC', league:'1. Lig', players:11, level:0, baseMatch:60, quality:1, stadium:0, training:0, sponsor:0, owned:false },
           ]
         },
-                 bank: {
-          checking: 0,
-          dailyRate: 0,
-          lastInterestAt: 0,
-          timeDeposit: { amount:0, start:0, durationMs:0, rate:0, penalty:0.1 },
-          loans: [],
-          fx: { USD:{ price:35, holding:0, costBasis:0 }, EUR:{ price:38, holding:0, costBasis:0 }, XAU:{ price:2500, holding:0, costBasis:0 } },
-          shares: { price:10, holding:0, costBasis:0, lastDividendAt:0 },
-          portfolio: []
+                         bank: undefined,
+        invest: {
+          view: 'main', // main | list | detail
+          tab: 'stocks', // stocks | crypto | startups | lottery
+          symbol: '',
+          symbols: {
+            stocks: [
+              { sym:'XBNK', name:'X Bankası', price:135, ch:-0.054, holding:0, costBasis:0 },
+              { sym:'AELEK', name:'Anadolu Elektrik', price:78, ch:0.032, holding:0, costBasis:0 },
+              { sym:'TRTCH', name:'TrTech', price:420, ch:-0.012, holding:0, costBasis:0 }
+            ],
+            crypto: [
+              { sym:'BTC', name:'Bitcoin', price:2100000, ch:0.018, holding:0, costBasis:0 },
+              { sym:'ETH', name:'Ethereum', price:120000, ch:-0.011, holding:0, costBasis:0 }
+            ],
+            startups: [
+              { sym:'FDM', name:'Foodom', price:15000, ch:0.05, holding:0, costBasis:0 },
+              { sym:'HLT', name:'HealTech', price:32000, ch:-0.02, holding:0, costBasis:0 }
+            ],
+            lottery: [
+              { sym:'L1', name:'Milli Loto', price:50, ch:0, holding:0, costBasis:0 }
+            ]
+          }
         },
         market: {
           cat: 'homes',
@@ -1024,6 +1065,20 @@
       pushPriceHistory('XAU', f.XAU.price);
       pushShareHistory(s.price);
       updateMiniCharts();
+      // invest symbols price walk
+      if (state.invest && state.invest.symbols) {
+        ['stocks','crypto','startups','lottery'].forEach(cat=>{
+          (state.invest.symbols[cat]||[]).forEach(a=>{
+            const baseStep = cat==='crypto'? 0.02 : 0.01;
+            const step = cat==='lottery' ? 0.0 : baseStep;
+            const old = a.price;
+            const min = old * 0.6, max = old * 1.6;
+            a.price = clamp(old * (1 + (Math.random()*2-1)*step), Math.max(1, min), max);
+            a.ch = (a.price - old) / old;
+          });
+        });
+        if (typeof renderInvestments._redraw === 'function') renderInvestments._redraw();
+      }
     }
 
     // ----- Chart helpers -----
@@ -1330,293 +1385,181 @@
       const tabs = qs('#invTabs');
       tabs.querySelectorAll('.subtab').forEach(btn=>{
         const key = btn.getAttribute('data-subtab');
-        btn.textContent = t({bank:'Bank',fx:'FX',shares:'Shares',rnd:'RnD'}[key]);
         btn.classList.toggle('active', state.ui.invSub===key);
         btn.onclick = ()=>{ state.ui.invSub = key; renderInvestments(); };
       });
 
       const panels = qs('#invPanels');
       panels.innerHTML = '';
-      if (state.ui.invSub==='bank') renderBankPanels(panels);
-      else if (state.ui.invSub==='fx') renderFXPanels(panels);
-      else if (state.ui.invSub==='shares') renderSharePanels(panels);
-      else if (state.ui.invSub==='rnd') renderRnDPanel(panels);
 
-      // Portfolio
-      const port = document.createElement('div'); port.className='item';
-      const totalPL = computePortfolioPL();
-      port.innerHTML = `
-                  <div class="h">📊 ${t('Portfolio')}</div>
-        <div class="meta"><div>Toplam P/L: <b>${formatMoney(totalPL)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
-        <div class="list" id="portList"></div>
-      `;
-      panels.appendChild(port);
-      renderPortfolioList();
-    }
+      // Helper to compute portfolio value and PL
+      function computeTotal() {
+        let value = 0, cost = 0;
+        const inv = state.invest;
+        ['stocks','crypto','startups','lottery'].forEach(cat=>{
+          (inv.symbols[cat]||[]).forEach(a=>{
+            value += (a.holding||0) * (a.price||0);
+            if ((a.holding||0) > 0) cost += (a.costBasis||0);
+          });
+        });
+        return { value, pl: value - cost };
+      }
 
-    function computePortfolioPL() {
-      let pl = 0;
-      Object.entries(state.bank.fx).forEach(([sym,x])=>{ const avg = x.holding>0 ? x.costBasis/x.holding : 0; pl += (x.price - avg) * x.holding; });
-      const s = state.bank.shares; const savg = s.holding>0 ? s.costBasis/s.holding : 0; pl += (s.price - savg) * s.holding;
-      return pl;
-    }
-    function renderPortfolioList() {
-      const box = qs('#portList'); if (!box) return; box.innerHTML='';
-      const rows = [];
-      Object.entries(state.bank.fx).forEach(([sym,x])=>{ if (x.holding>0) rows.push({name:sym, qty:x.holding, price:x.price}); });
-      const s = state.bank.shares; if (s.holding>0) rows.push({name:'BANK', qty:s.holding, price:s.price});
-      rows.forEach(r=>{
-        const el = document.createElement('div'); el.className='item';
-        el.innerHTML = `<div class="row space"><div>${r.name}</div><div>${r.qty.toFixed(3)} @ ₺${r.price.toFixed(2)}</div></div>`;
-        box.appendChild(el);
-      });
-    }
-
-    function renderBankPanels(panels) {
-      // Checking
-      const chk = document.createElement('div'); chk.className = 'item';
-      chk.innerHTML = `
-        <div class="h">🏦 ${t('Checking')}</div>
-        <div class="meta"><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div><div></div></div>
-        <div class="two">
-          <div>
-            <label>${t('Amount')}</label>
-            <input type="number" inputmode="decimal" min="0" step="0.01" id="amtChk">
-          </div>
-          <div class="row" style="align-items:flex-end;">
-            <button class="btn" id="btnDep">${t('Deposit')}</button>
-            <button class="btn" id="btnWit">${t('Withdraw')}</button>
-          </div>
-        </div>
-      `;
-      panels.appendChild(chk);
-      qs('#btnDep').onclick = ()=> {
-        const v = parseFloat(qs('#amtChk').value||'0');
-        if (Number.isFinite(v) && v>0 && spend(v)) { state.bank.checking += v; renderInvestments(); saveState(false); }
-      };
-      qs('#btnWit').onclick = ()=> {
-        const v = parseFloat(qs('#amtChk').value||'0');
-        if (Number.isFinite(v) && v>0 && state.bank.checking>=v) { state.bank.checking -= v; state.balance += v; renderInvestments(); saveState(false); }
-      };
-
-      // Time deposit
-      const td = state.bank.timeDeposit;
-      const tdp = document.createElement('div'); tdp.className='item';
-      const mature = td.amount>0 && (now() >= td.start + (td.durationMs||0));
-      tdp.innerHTML = `
-        <div class="h">⏳ ${t('TimeDeposit')}</div>
-        <div class="meta"><div>${t('Amount')}: <b>${formatMoney(td.amount)}</b></div><div>Vade: <b>${td.durationMs? (td.durationMs/3600000)+'saat' : '-'}</b> • Oran: <b>${((td.rate||0)*100).toFixed(2)}%</b></div></div>
-        <div class="two">
-          <div>
-            <label>${t('Amount')}</label>
-            <input type="number" inputmode="decimal" min="0" step="0.01" id="tdAmt">
-          </div>
-          <div>
-            <label>Vade</label>
-            <select id="tdPlan">
-              <option value="3600000|0.02">1 Saat • %2</option>
-              <option value="21600000|0.15">6 Saat • %15</option>
-              <option value="43200000|0.28">12 Saat • %28</option>
-              <option value="86400000|0.5">24 Saat • %50</option>
-            </select>
-          </div>
-        </div>
-        <div class="row space" style="margin-top:8px;">
-          <button class="btn ${td.amount? '':'btn-primary'}" id="btnTDStart" ${td.amount?'disabled':''}>${t('Start')}</button>
-          <button class="btn ${mature? 'btn-ok':''}" id="btnTDEarly" ${td.amount? '':'disabled'}>${t('EarlyWithdraw')} (${t('Penalty')} ${(td.penalty*100)|0}%)</button>
-        </div>
-        <div class="hint">${td.amount? ('Maturity: ' + new Date(td.start + (td.durationMs||0)).toLocaleString()) : ''}</div>
-      `;
-      panels.appendChild(tdp);
-      qs('#btnTDStart').onclick = ()=>{
-        const v = parseFloat(qs('#tdAmt').value||'0');
-        const planVal = (qs('#tdPlan').value||'').split('|');
-        const dur = parseInt(planVal[0]||'0',10);
-        const rate = parseFloat(planVal[1]||'0');
-        if (v>0 && dur>0 && state.bank.checking>=v) {
-          state.bank.checking -= v;
-          td.amount = v; td.durationMs = dur; td.start = now(); td.rate = rate; td.penalty = 0.1;
-          renderInvestments(); saveState(false);
-          const task = state.tasks.daily.find(x=>x.id==='d_invest'); if (task){ ensureDaily(task); task.progress = clamp(task.progress+1,0,task.goal);} 
-        }
-      };
-      qs('#btnTDEarly').onclick = ()=>{
-        if (td.amount<=0) return;
-        let payout;
-        if (now() >= td.start + (td.durationMs||0)) {
-          const interest = td.amount * td.rate;
-          payout = td.amount + interest;
-        } else {
-          payout = td.amount * (1 - td.penalty);
-        }
-        state.bank.checking += payout;
-        td.amount = 0; td.durationMs=0; td.start=0; td.rate=0;
-        renderInvestments(); saveState(false);
-      };
-
-      // Loans
-      const ln = document.createElement('div'); ln.className='item';
-      ln.innerHTML = `
-        <div class="h">💳 ${t('Loans')}</div>
-        <div class="two">
-          <button class="btn btn-warn" id="btnLoanP">${t('PersonalLoan')} (₺1.000 @ 5d)</button>
-          <button class="btn btn-warn" id="btnLoanB">${t('BusinessLoan')} (₺10.000 @ 14d)</button>
-        </div>
-        <div class="list" id="loanList"></div>
-      `;
-      panels.appendChild(ln);
-      qs('#btnLoanP').onclick = ()=> takeLoan('ihtiyac', 1000, 0.05, 5);
-      qs('#btnLoanB').onclick = ()=> takeLoan('isletme', 10000, 0.08, 14);
-
-      renderLoans();
-    }
-
-    function takeLoan(type, amount, ratePerDay, termDays) {
-      state.bank.loans.push({ type, amount, rate: ratePerDay, remaining: amount*(1+ratePerDay*termDays), termDays, lastAccrued: now() });
-      state.balance += amount;
-      renderInvestments(); saveState(false);
-    }
-
-    function renderLoans() {
-      const box = qs('#loanList');
-      box.innerHTML='';
-      state.bank.loans.forEach((ln,idx)=>{
-        accrueLoan(ln);
-        const it = document.createElement('div'); it.className='item';
-        it.innerHTML = `
-          <div class="meta"><div>${ln.type==='ihtiyac'?t('PersonalLoan'):t('BusinessLoan')} • ${ln.termDays} ${t('Days')}</div><div>${t('Amount')}: <b>${formatMoney(ln.remaining)}</b></div></div>
-          <div class="row space"><div class="hint">Faiz: ${(ln.rate*100).toFixed(2)}%/gün</div><button class="btn" data-repay="${idx}">${t('Repay')}</button></div>
-        `;
-        box.appendChild(it);
-      });
-      qsa('[data-repay]').forEach(btn=> btn.onclick = ()=>{
-        const idx = parseInt(btn.getAttribute('data-repay'),10);
-        const ln = state.bank.loans[idx]; if (!ln) return;
-        if (state.balance >= ln.remaining) { state.balance -= ln.remaining; state.bank.loans.splice(idx,1); renderInvestments(); saveState(false); }
-      });
-    }
-
-    function accrueLoan(ln) {
-      const last = ln.lastAccrued||0;
-      if (now()-last < 60*1000) return; // per minute approx
-      const minutes = Math.floor((now()-last)/(60*1000));
-      ln.lastAccrued = now();
-      const perMin = ln.rate / (24*60);
-      ln.remaining *= (1 + perMin * minutes);
-      // auto small repayment if checking has money
-      const autoPay = Math.min(state.bank.checking, ln.remaining * 0.01);
-      state.bank.checking -= autoPay; ln.remaining -= autoPay;
-    }
-
-    function renderFXPanels(panels) {
-      const fx = state.bank.fx;
-      destroyFXCharts();
-      ['USD','EUR','XAU'].forEach(sym=>{
-        const x = fx[sym];
-        const it = document.createElement('div'); it.className='item';
-        const avg = x.holding>0 ? x.costBasis/x.holding : 0;
-        const pl = x.holding>0 ? (x.price - avg) * x.holding : 0;
-        const chartId = `fxChart_${sym}`;
-        it.innerHTML = `
-          <div class="row space"><div class="h">${sym}</div><div class="pill">${t('Holding')}: ${x.holding.toFixed(3)}</div></div>
-          <div class="meta"><div>${t('Price')}: <b>₺${x.price.toFixed(2)}</b> • Avg: <b>₺${avg.toFixed(2)}</b> • P/L: <b>${formatMoney(pl)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
-          <div style="background:#0f1a2b;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;">
-            <canvas id="${chartId}" height="140"></canvas>
-          </div>
+      // Main overview
+      if (state.ui.invSub === 'main') {
+        const { value, pl } = computeTotal();
+        const box = document.createElement('div'); box.className='item';
+        box.innerHTML = `
+          <div class="row space"><div class="h">${t('CurrentValue')}</div><div class="pill">${formatMoney(value)}</div></div>
+          <div class="meta"><div>${t('TotalPL')}: <b>${formatMoney(pl)}</b></div><div></div></div>
           <div class="two" style="margin-top:8px;">
+            <button class="btn btn-primary" id="btnInvestNow">${t('InvestNow')}</button>
+            <button class="btn" id="btnMyInv">${t('MyInvestments')}</button>
+          </div>
+        `;
+        panels.appendChild(box);
+        qs('#btnInvestNow').onclick = ()=> { state.ui.invSub = 'list'; renderInvestments(); };
+        qs('#btnMyInv').onclick = ()=> { state.ui.invSub = 'mine'; renderInvestments(); };
+        return;
+      }
+
+      // Category list to pick a symbol to invest
+      if (state.ui.invSub === 'list') {
+        const head = document.createElement('div'); head.className='item';
+        head.innerHTML = `<div class="row space"><div class="h">${t('InvestNow')}</div><button class="btn" id="btnBackInv">${t('Back')}</button></div>`;
+        panels.appendChild(head);
+        qs('#btnBackInv').onclick = ()=> { state.ui.invSub = 'main'; renderInvestments(); };
+        ['stocks','crypto','startups','lottery'].forEach(cat=>{
+          const card = document.createElement('div'); card.className='item';
+          card.innerHTML = `<div class="h">${t({stocks:'Stocks',crypto:'Crypto',startups:'Startups',lottery:'Lottery'}[cat])}</div>`;
+          (state.invest.symbols[cat]||[]).forEach(a=>{
+            const row = document.createElement('div'); row.className='item';
+            const ch = (a.ch*100).toFixed(2);
+            const sign = a.ch>=0 ? '+' : '';
+            row.innerHTML = `
+              <div class="row space">
+                <div class="h">${a.sym} • ${a.name}</div>
+                <div class="pill">${formatMoney(a.price)} • <span style="color:${a.ch>=0?'#22c55e':'#ef4444'};">${sign}${ch}%</span></div>
+              </div>
+              <div class="row right"><button class="btn btn-primary" data-open="${cat}:${a.sym}">${t('Buy')}</button></div>
+            `;
+            card.appendChild(row);
+          });
+          panels.appendChild(card);
+        });
+        qsa('[data-open]').forEach(btn=> btn.onclick = ()=>{
+          const [cat, sym] = btn.getAttribute('data-open').split(':');
+          state.invest.tab = cat; state.invest.symbol = sym; state.ui.invSub = 'detail';
+          renderInvestments();
+        });
+        return;
+      }
+
+      // My investments summary with filters
+      if (state.ui.invSub === 'mine') {
+        const head = document.createElement('div'); head.className='item';
+        head.innerHTML = `<div class="row space"><div class="h">${t('MyInvestments')}</div><button class="btn" id="btnBackMine">${t('Back')}</button></div>`;
+        panels.appendChild(head);
+        qs('#btnBackMine').onclick = ()=> { state.ui.invSub = 'main'; renderInvestments(); };
+        ['stocks','crypto','startups','lottery'].forEach(cat=>{
+          const list = (state.invest.symbols[cat]||[]).filter(a=> (a.holding||0) > 0);
+          const card = document.createElement('div'); card.className='item';
+          card.innerHTML = `<div class="h">${t({stocks:'Stocks',crypto:'Crypto',startups:'Startups',lottery:'Lottery'}[cat])}</div>`;
+          if (list.length===0) {
+            const empty = document.createElement('div'); empty.className='hint'; empty.textContent = '-'; card.appendChild(empty);
+          } else {
+            list.forEach(a=>{
+              const avg = (a.holding>0) ? a.costBasis/a.holding : 0;
+              const pl = (a.price - avg) * a.holding;
+              const row = document.createElement('div'); row.className='item';
+              row.innerHTML = `
+                <div class="row space"><div>${a.sym} • ${a.name}</div><div class="pill">${formatShort(a.holding)} @ ${formatMoney(a.price)} • P/L ${formatMoney(pl)}</div></div>
+                <div class="row right"><button class="btn" data-open="${cat}:${a.sym}">${t('Buy')}</button></div>
+              `;
+              card.appendChild(row);
+            });
+          }
+          panels.appendChild(card);
+        });
+        qsa('[data-open]').forEach(btn=> btn.onclick = ()=>{
+          const [cat, sym] = btn.getAttribute('data-open').split(':');
+          state.invest.tab = cat; state.invest.symbol = sym; state.ui.invSub = 'detail';
+          renderInvestments();
+        });
+        return;
+      }
+
+      // Detail view for a single symbol
+      if (state.ui.invSub === 'detail') {
+        const cat = state.invest.tab; const sym = state.invest.symbol;
+        const a = (state.invest.symbols[cat]||[]).find(x=>x.sym===sym);
+        if (!a) { state.ui.invSub='main'; renderInvestments(); return; }
+        const avg = a.holding>0 ? a.costBasis/a.holding : 0;
+        const pl = (a.price - avg) * a.holding;
+        const card = document.createElement('div'); card.className='item';
+        card.innerHTML = `
+          <div class="row space"><div class="h">${a.sym} • ${a.name}</div><button class="btn" id="btnBackDet">${t('Back')}</button></div>
+          <div class="meta"><div>${t('Price')}: <b>${formatMoney(a.price)}</b> • ${t('Change')}: <b style="color:${a.ch>=0?'#22c55e':'#ef4444'};">${a.ch>=0?'+':''}${(a.ch*100).toFixed(2)}%</b></div><div>${t('Wallet')}: <b>${formatShort(a.holding)}</b> • ${t('Avg')}: <b>${formatMoney(avg)}</b> • P/L: <b>${formatMoney(pl)}</b></div></div>
+          <div style="background:#0f1a2b;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px;margin:6px 0;">
+            <canvas id="detChart" height="140"></canvas>
+          </div>
+          <div class="two">
             <div>
               <label>${t('Amount')}</label>
-              <input type="number" inputmode="decimal" min="0" step="0.001" id="fxAmt_${sym}">
+              <input type="number" inputmode="decimal" min="0" step="0.001" id="detAmt">
             </div>
             <div class="row" style="align-items:flex-end;">
-              <button class="btn" data-fx="${sym}" data-act="buy">${t('BuyShort')}</button>
-              <button class="btn" data-fx="${sym}" data-act="sell">${t('SellShort')}</button>
-              <button class="btn" data-fx="${sym}" data-act="sellall">${t('SellAll')}</button>
+              <button class="btn btn-primary" id="btnDetBuy">${t('Buy')}</button>
+              <button class="btn" id="btnDetMax">${t('Max')}</button>
+              <button class="btn" id="btnDetSellAll">${t('SellAll')}</button>
             </div>
           </div>
         `;
-        panels.appendChild(it);
-        // init chart if not exists
-        setTimeout(()=> initMiniChart(chartId, sym), 0);
-      });
-      qsa('[data-fx]').forEach(btn=> btn.onclick = ()=>{
-        const sym = btn.getAttribute('data-fx');
-        const act = btn.getAttribute('data-act');
-        const amt = parseFloat(qs('#fxAmt_'+sym).value||'0');
-        const x = state.bank.fx[sym]; if (!x) return;
-        if (act==='buy') {
-          if (!(amt>0)) return;
-          const cost = amt * x.price;
-          if (state.bank.checking >= cost) { state.bank.checking -= cost; x.costBasis += amt * x.price; x.holding += amt; state.bank.portfolio.push({ type:'FX', sym, qty:amt, price:x.price, time:now() }); }
-        } else if (act==='sell') {
-          if (!(amt>0)) return;
-          const sellQty = Math.min(amt, x.holding);
-          const proceeds = sellQty * x.price;
-          const ratio = x.holding>0 ? (sellQty/x.holding) : 0;
-          x.costBasis = Math.max(0, x.costBasis - x.costBasis*ratio);
-          x.holding = Math.max(0, x.holding-sellQty);
-          state.bank.checking += proceeds;
-        } else if (act==='sellall') {
-          const proceeds = x.holding * x.price;
-          x.holding = 0; x.costBasis = 0; state.bank.checking += proceeds;
-        }
-        const d = state.tasks.daily.find(xx=>xx.id==='d_invest'); if (d){ ensureDaily(d); d.progress = clamp(d.progress+1, 0, d.goal);} 
-        renderInvestments(); saveState(false);
-      });
-    }
+        panels.appendChild(card);
+        qs('#btnBackDet').onclick = ()=> { state.ui.invSub = 'main'; renderInvestments(); };
+        // Chart init (simple price walk buffer)
+        setTimeout(()=>{
+          const ctx = document.getElementById('detChart');
+          if (!ctx) return;
+          const data = { labels: [], datasets: [{ label: sym, data: [], borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.15)', tension: .25, pointRadius: 0 }] };
+          const ch = new Chart(ctx, { type:'line', data, options:{ responsive:true, animation:false, plugins:{legend:{display:false}}, scales:{x:{display:false}, y:{display:false}} } });
+          if (!renderInvestments._hist) renderInvestments._hist = {};
+          if (!renderInvestments._hist[sym]) renderInvestments._hist[sym] = [];
+          const hist = renderInvestments._hist[sym];
+          if (hist.length===0) { for (let i=0;i<20;i++){ hist.push(a.price);} }
+          function redraw(){ ch.data.labels = hist.map((_,i)=> String(i)); ch.data.datasets[0].data = hist; ch.update(); }
+          redraw();
+          renderInvestments._redraw = redraw;
+        },0);
+        // Actions
+        qs('#btnDetMax').onclick = ()=>{
+          const cash = state.balance||0;
+          const maxQty = cash / a.price;
+          qs('#detAmt').value = String(Math.max(0, Math.floor(maxQty*1000)/1000));
+        };
+        qs('#btnDetBuy').onclick = ()=>{
+          const amt = parseFloat(qs('#detAmt').value||'0'); if (!(amt>0)) return;
+          const cost = amt * a.price; if (spend(cost)) { a.holding += amt; a.costBasis += cost; toast('+'+formatMoney(amt*a.price)); renderInvestments(); saveState(false); }
+        };
+        qs('#btnDetSellAll').onclick = ()=>{
+          if ((a.holding||0)<=0) return;
+          const proceeds = a.holding * a.price; state.balance += proceeds; a.holding = 0; a.costBasis = 0; toast('+'+formatMoney(proceeds)); renderInvestments(); saveState(false);
+        };
+        return;
+      }
 
-    function renderSharePanels(panels) {
-      const s = state.bank.shares;
-      const it = document.createElement('div'); it.className='item';
-      const avg = s.holding>0 ? s.costBasis/s.holding : 0;
-      const pl = s.holding>0 ? (s.price - avg) * s.holding : 0;
-      it.innerHTML = `
-        <div class="row space"><div class="h">🏛️ ${t('Shares')}</div><div class="pill">${t('Holding')}: ${s.holding.toFixed(2)}</div></div>
-        <div class="meta"><div>${t('Price')}: <b>₺${s.price.toFixed(2)}</b> • Avg: <b>₺${avg.toFixed(2)}</b> • P/L: <b>${formatMoney(pl)}</b></div><div>${t('Balance')}: <b>${formatMoney(state.bank.checking)}</b></div></div>
-        <div class="two">
-          <div>
-            <label>${t('Amount')}</label>
-            <input type="number" inputmode="decimal" min="0" step="0.01" id="shareAmt">
-          </div>
-          <div class="row" style="align-items:flex-end;">
-            <button class="btn" id="btnShareBuy">${t('BuyShort')}</button>
-            <button class="btn" id="btnShareSell">${t('SellShort')}</button>
-            <button class="btn" id="btnShareSellAll">${t('SellAll')}</button>
-          </div>
-        </div>
-      `;
-      panels.appendChild(it);
-      qs('#btnShareBuy').onclick = ()=> {
-        const amt = parseFloat(qs('#shareAmt').value||'0');
-        if (!(amt>0)) return;
-        const cost = amt * s.price;
-        if (state.bank.checking >= cost) { state.bank.checking -= cost; s.costBasis += amt * s.price; s.holding += amt; state.bank.portfolio.push({ type:'SHARE', sym:'BANK', qty:amt, price:s.price, time:now() }); renderInvestments(); saveState(false); }
-      };
-      qs('#btnShareSell').onclick = ()=> {
-        const amt = parseFloat(qs('#shareAmt').value||'0');
-        if (!(amt>0)) return;
-        const sell = Math.min(amt, s.holding);
-        const proceeds = sell * s.price;
-        const ratio = s.holding>0 ? (sell/s.holding) : 0;
-        s.costBasis = Math.max(0, s.costBasis - s.costBasis*ratio);
-        s.holding -= sell; state.bank.checking += proceeds; renderInvestments(); saveState(false);
-      };
-      qs('#btnShareSellAll').onclick = ()=> { const proceeds = s.holding * s.price; s.holding=0; s.costBasis=0; state.bank.checking += proceeds; renderInvestments(); saveState(false); };
-    }
-
-    function renderRnDPanel(panels) {
-      const it = document.createElement('div'); it.className='item';
-      it.innerHTML = `
-        <div class="h">🔬 ${t('RnD')}</div>
-        <div class="meta"><div>${t('RnDClick')}: <b>+${(state.rd.clickPct*100).toFixed(1)}%</b></div><div>${t('RnDIncome')}: <b>+${(state.rd.incomePct*100).toFixed(1)}%</b></div></div>
-        <div class="two">
-          <button class="btn btn-primary" id="btnRClick">${t('Research')} (+2% ${t('Tap')}) • ${formatMoney(5000)}</button>
-          <button class="btn btn-primary" id="btnRIncome">${t('Research')} (+2% ${t('PerSecond')}) • ${formatMoney(8000)}</button>
-        </div>
-      `;
-      panels.appendChild(it);
-      qs('#btnRClick').onclick = ()=>{ if (spend(5000)) { state.rd.clickPct += 0.02; renderInvestments(); saveState(false);} };
-      qs('#btnRIncome').onclick = ()=>{ if (spend(8000)) { state.rd.incomePct += 0.02; renderInvestments(); saveState(false);} };
+      // Category quick lists
+      const cat = state.ui.invSub;
+      const list = document.createElement('div'); list.className='item';
+      list.innerHTML = `<div class="row space"><div class="h">${t({stocks:'Stocks',crypto:'Crypto',startups:'Startups',lottery:'Lottery'}[cat])}</div><button class="btn" id="btnBackCat">${t('Back')}</button></div>`;
+      (state.invest.symbols[cat]||[]).forEach(a=>{
+        const row = document.createElement('div'); row.className='item';
+        const ch = (a.ch*100).toFixed(2); const sign = a.ch>=0?'+':'';
+        row.innerHTML = `<div class="row space"><div>${a.sym} • ${a.name}</div><div class="pill">${formatMoney(a.price)} • <span style="color:${a.ch>=0?'#22c55e':'#ef4444'};">${sign}${ch}%</span></div></div>`;
+        list.appendChild(row);
+      });
+      panels.appendChild(list);
+      qs('#btnBackCat').onclick = ()=> { state.ui.invSub = 'main'; renderInvestments(); };
     }
 
     function renderMarket() {
