@@ -265,7 +265,27 @@
 
       <!-- Market Screen -->
       <section class="screens" id="screen-market">
+        <div class="subtabs" id="marketTabs">
+          <button class="subtab active" data-mcat="homes">Evler</button>
+          <button class="subtab" data-mcat="cars">Arabalar</button>
+          <button class="subtab" data-mcat="other">Diğer</button>
+        </div>
         <div class="list" id="marketList"></div>
+      </section>
+
+      <!-- Profile Screen -->
+      <section class="screens" id="screen-profile">
+        <div class="profile-header">
+          <div class="avatar" id="avatar" style="background-image:url('')"></div>
+          <div class="profile-grid" style="width:100%;max-width:520px;">
+            <label>Kullanıcı Adı</label>
+            <input id="profileName" type="text" placeholder="Adın">
+            <label>Profil Resmi</label>
+            <input id="profileAvatar" type="file" accept="image/*">
+            <button class="btn btn-primary" id="btnSaveProfile">Profili Kaydet</button>
+          </div>
+        </div>
+        <div class="list" id="showcaseList"></div>
       </section>
     </main>
 
@@ -286,6 +306,10 @@
         <button data-screen="market" id="navMarket">
           <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39A2 2 0 0 0 9.62 16H19a2 2 0 0 0 2-1.72l1-7A2 2 0 0 0 20 5H5"/></svg>
           <span id="iNavMarket">Market</span>
+        </button>
+        <button data-screen="profile" id="navProfile">
+          <svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="iNavProfile">Profil</span>
         </button>
       </div>
     </nav>
@@ -366,6 +390,12 @@
         Businesses: "İşletmeler",
         Investments: "Yatırımlar",
         Market: "Market",
+        Profile: "Profil",
+        Homes: "Evler",
+        Cars: "Arabalar",
+        Other: "Diğer",
+        Username: "Kullanıcı Adı",
+        SaveProfile: "Profili Kaydet",
         Settings: "Ayarlar",
         Close: "Kapat",
         Language: "Dil / Language",
@@ -457,6 +487,12 @@
         Businesses: "Businesses",
         Investments: "Investments",
         Market: "Market",
+        Profile: "Profile",
+        Homes: "Homes",
+        Cars: "Cars",
+        Other: "Other",
+        Username: "Username",
+        SaveProfile: "Save Profile",
         Settings: "Settings",
         Close: "Close",
         Language: "Language",
@@ -601,14 +637,20 @@
           portfolio: []
         },
         market: {
+          cat: 'homes',
           items: [
-            { id:'phone', cat:'electronics', nameTR:'Akıllı Telefon', nameEN:'Smartphone', cost:1000, effect:{ clickPct:0.05 }, owned:0 },
-            { id:'bike', cat:'vehicles', nameTR:'Bisiklet', nameEN:'Bicycle', cost:500, effect:{ levelPct:0.02 }, owned:0 },
-            { id:'watch', cat:'jewelry', nameTR:'Saat', nameEN:'Watch', cost:2500, effect:{ adPlus:1 }, owned:0 },
-            { id:'pc', cat:'electronics', nameTR:'Bilgisayar', nameEN:'Computer', cost:6000, effect:{ incomePct:0.04 }, owned:0 },
+            { id:'apt1', cat:'realestate', cat2:'homes', nameTR:'Apartman Dairesi', nameEN:'Apartment', cost:50000, effect:{}, owned:0, image:'' },
+            { id:'house1', cat:'realestate', cat2:'homes', nameTR:'Müstakil Ev', nameEN:'House', cost:120000, effect:{}, owned:0, image:'' },
+            { id:'car1', cat:'vehicles', cat2:'cars', nameTR:'Sedan', nameEN:'Sedan', cost:80000, effect:{}, owned:0, image:'' },
+            { id:'suv1', cat:'vehicles', cat2:'cars', nameTR:'SUV', nameEN:'SUV', cost:150000, effect:{}, owned:0, image:'' },
+            { id:'phone', cat:'electronics', cat2:'other', nameTR:'Akıllı Telefon', nameEN:'Smartphone', cost:1000, effect:{ clickPct:0.05 }, owned:0 },
+            { id:'bike', cat:'vehicles', cat2:'other', nameTR:'Bisiklet', nameEN:'Bicycle', cost:500, effect:{ levelPct:0.02 }, owned:0 },
+            { id:'watch', cat:'jewelry', cat2:'other', nameTR:'Saat', nameEN:'Watch', cost:2500, effect:{ adPlus:1 }, owned:0 },
+            { id:'pc', cat:'electronics', cat2:'other', nameTR:'Bilgisayar', nameEN:'Computer', cost:6000, effect:{ incomePct:0.04 }, owned:0 },
           ]
         },
         rd: { clickPct:0, incomePct:0, level:0 },
+        profile: { name:'', avatar:'' },
         tasks: {
           daily: [
             { id:'d_click', nameTR:'500 Tıklama', nameEN:'500 Clicks', goal:500, progress:0, reward:1, day:'' },
@@ -977,6 +1019,7 @@
       (state.tasks.daily||[]).forEach(task=>{
         ensureDaily(task);
         const pct = clamp((task.progress/task.goal)*100, 0, 100);
+        const done = task.progress>=task.goal;
         const title = state.lang==='tr' ? task.nameTR : task.nameEN;
         const div = document.createElement('div');
         div.className = 'item';
@@ -988,7 +1031,7 @@
           <div class="progress"><span style="width:${pct}%;"></span></div>
           <div class="row space">
             <div class="hint">${t('Prestige')}: +${task.reward}</div>
-            <button class="btn btn-ok" ${task.progress>=task.goal?'':'disabled'} data-task="${task.id}">${t('Complete')}</button>
+            <button class="btn ${done?'btn-ok':''}" ${done?'':'disabled'} data-task="${task.id}">${done?(state.lang==='tr'?'Tamamlandı':'Completed'):t('Complete')}</button>
           </div>
         `;
         box.appendChild(div);
@@ -1020,7 +1063,7 @@
       const arr = state.businesses[sub] || [];
       arr.forEach(b=>{
         const name = state.lang==='tr' ? (b.nameTR||b.id) : (b.nameEN||b.id);
-        const income = buildingIncome(b) * incomeMultiplier();
+        const incPerSec = buildingIncome(b) * incomeMultiplier();
         const cost = buildingCost(b);
         const can = state.balance >= cost;
         const locked = (sub==='mega' && state.level < (b.unlockLevel||0));
@@ -1031,7 +1074,7 @@
             <div class="biz-row"><div class="biz-icon">🏪</div><div class="h">${name}</div></div>
             <div class="pill">${t('Owned')}: ${b.level||0}</div>
           </div>
-          <div class="meta"><div>${t('Income')}: <b>${formatMoney(income)}/s</b> • Biriken: <b>${uncol}</b></div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
+          <div class="meta"><div>${t('Income')}: <b>${formatMoney(incPerSec)}/s</b> • Biriken: <b>${uncol}</b> • Toplam/s: <b>${formatMoney(incPerSec*(b.level||0))}</b></div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
           <div class="two">
             <button class="btn btn-primary" ${(!can||locked)?'disabled':''} data-bid="${b.id}">${b.level>0?t('Upgrade'):t('Buy')}</button>
                          <button class="btn" data-collect="${b.id}">${t('Collect')}</button>
@@ -1041,7 +1084,7 @@
         list.appendChild(it);
       });
       qsa('[data-collect]').forEach(btn=> btn.onclick = ()=>{ collectBusiness(btn.getAttribute('data-collect')); renderBusinesses(); renderHeader(); saveState(false); });
-      qsa('[data-manager]').forEach(btn=> btn.onclick = ()=>{ const id=btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(!b) return; const mc=1000 + (b.level||0)*500; if (b.manager) { b.manager=false; } else { if (spend(mc)) b.manager=true; } renderBusinesses(); saveState(false); });
+      qsa('[data-manager]').forEach(btn=> btn.onclick = ()=>{ const id=btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(!b) return; const mc=1000 + (b.level||0)*500; if (!b.manager) { if (spend(mc)) { b.manager=true; b.lastCollectedAt = now(); } } else { b.manager=false; } renderBusinesses(); saveState(false); });
       qsa('[data-bid]').forEach(btn=> btn.onclick = ()=>{
         const id = btn.getAttribute('data-bid');
         const sub = state.ui.bizSub;
@@ -1420,21 +1463,36 @@
     }
 
     function renderMarket() {
+      const tabs = qs('#marketTabs');
+      if (tabs) {
+        tabs.querySelectorAll('.subtab').forEach(btn=>{
+          const key = btn.getAttribute('data-mcat');
+          const active = (state.market.cat||'homes')===key;
+          btn.classList.toggle('active', active);
+          btn.onclick = ()=>{ state.market.cat = key; renderMarket(); };
+          btn.textContent = t({homes:'Homes',cars:'Cars',other:'Other'}[key]);
+        });
+      }
       const box = qs('#marketList');
       box.innerHTML='';
-      (state.market.items||[]).forEach(itm=>{
+      const cat = state.market.cat||'homes';
+      (state.market.items||[]).filter(itm=>{
+        if (!itm.cat2) return true;
+        return itm.cat2===cat;
+      }).forEach(itm=>{
         const name = state.lang==='tr'? itm.nameTR : itm.nameEN;
         const cost = itm.cost * Math.pow(1.2, itm.owned||0);
         const it = document.createElement('div'); it.className='item';
         const effects = [];
-        if (itm.effect.clickPct) effects.push('+'+(itm.effect.clickPct*100)+'% click');
-        if (itm.effect.levelPct) effects.push('+'+(itm.effect.levelPct*100)+'% level');
-        if (itm.effect.adPlus) effects.push('+Ad');
-        if (itm.effect.incomePct) effects.push('+'+(itm.effect.incomePct*100)+'% income');
+        if (itm.effect && itm.effect.clickPct) effects.push('+'+(itm.effect.clickPct*100)+'% click');
+        if (itm.effect && itm.effect.levelPct) effects.push('+'+(itm.effect.levelPct*100)+'% level');
+        if (itm.effect && itm.effect.adPlus) effects.push('+Ad');
+        if (itm.effect && itm.effect.incomePct) effects.push('+'+(itm.effect.incomePct*100)+'% income');
         it.innerHTML = `
           <div class="row space"><div class="h">🛒 ${name}</div><div class="pill">x${itm.owned||0}</div></div>
           <div class="meta"><div>${effects.join(', ')}</div><div>${t('Cost')}: <b>${formatMoney(cost)}</b></div></div>
           <div class="row right"><button class="btn btn-primary" data-market="${itm.id}">${t('Buy')}</button></div>
+          ${itm.image?`<div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);"><img src="${itm.image}" alt="${name}" style="display:block;width:100%;height:160px;object-fit:cover;"></div>`:''}
         `;
         box.appendChild(it);
       });
@@ -1444,6 +1502,23 @@
         const cost = it.cost * Math.pow(1.2, it.owned||0);
         if (spend(cost)) { it.owned=(it.owned||0)+1; renderMarket(); saveState(false);
           const d = state.tasks.daily.find(x=>x.id==='d_market'); if (d){ ensureDaily(d); d.progress = clamp(d.progress+1,0,d.goal);} }
+      });
+    }
+
+    function renderProfileShowcase() {
+      const list = qs('#showcaseList'); if (!list) return;
+      list.innerHTML = '';
+      const owned = (state.market.items||[]).filter(it=> (it.owned||0) > 0);
+      if (owned.length===0) return;
+      owned.forEach(it=>{
+        const name = state.lang==='tr'? it.nameTR : it.nameEN;
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="row space"><div class="h">${name}</div><div class="pill">x${it.owned}</div></div>
+          ${it.image?`<div style="width:100%;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);"><img src="${it.image}" alt="${name}" style="display:block;width:100%;height:160px;object-fit:cover;"></div>`:''}
+        `;
+        list.appendChild(div);
       });
     }
 
@@ -1463,6 +1538,11 @@
       qs('#iNavBiz').textContent = t('Businesses');
       qs('#iNavInv').textContent = t('Investments');
       qs('#iNavMarket').textContent = t('Market');
+      const profBtn = document.getElementById('iNavProfile'); if (profBtn) profBtn.textContent = t('Profile');
+      
+      // Profile labels
+      const nameLbl = document.querySelector('label[for=profileName]'); if (nameLbl) nameLbl.textContent = t('Username');
+      const btnSaveProfile = document.getElementById('btnSaveProfile'); if (btnSaveProfile) btnSaveProfile.textContent = t('SaveProfile');
       
       // Localize static TR strings in biz/football buttons on re-render
       qsa('[data-manager]').forEach(btn=>{ const id = btn.getAttribute('data-manager'); const all=[...(state.businesses.normal||[]),...(state.businesses.special||[]),...(state.businesses.mega||[])]; const b=all.find(x=>x.id===id); if(b){ btn.textContent = b.manager ? t('ManagerActive') : t('ManagerHire'); }});
@@ -1498,6 +1578,7 @@
       renderBusinesses();
       renderInvestments();
       renderMarket();
+      renderProfileShowcase();
       renderNav();
       renderSettings();
     }
@@ -1509,7 +1590,7 @@
     function playNav(){ try{ navAudio.currentTime=0; navAudio.play(); }catch(e){} }
 
     function wire() {
-      qs('#tapBtn').onclick = ()=> { playClick(); doClick(); renderHeader(); renderClicker(); saveState(false); };
+      qs('#tapBtn').onclick = ()=> { playClick(); doClick(); renderHeader(); renderClicker(); renderTasks(); saveState(false); };
 
       qs('#btnGift').onclick = ()=> { claimGift(); renderHeader(); renderGiftsAds(); saveState(false); };
       qs('#btnAd').onclick = ()=> { showRewardAd().then(()=> { watchAd(); renderGiftsAds(); saveState(false); }).catch(()=>{ watchAd(); renderGiftsAds(); saveState(false); }); };
@@ -1527,6 +1608,18 @@
       qs('#btnSettings').onclick = ()=> openSettings(true);
       qs('#btnCloseSettings').onclick = ()=> openSettings(false);
       qs('#langSelect').onchange = (e)=> { state.lang = e.target.value; renderAll(); saveState(false); };
+      
+      // Profile wiring
+      const nm = qs('#profileName'); if (nm) nm.value = state.profile?.name || '';
+      const av = qs('#avatar'); if (av && state.profile?.avatar) av.style.backgroundImage = `url('${state.profile.avatar}')`;
+      const fa = qs('#profileAvatar'); if (fa) fa.onchange = (e)=>{
+        const file = e.target.files && e.target.files[0]; if (!file) return;
+        const rdr = new FileReader();
+        rdr.onload = ()=> { state.profile = state.profile||{}; state.profile.avatar = rdr.result; av.style.backgroundImage = `url('${rdr.result}')`; saveState(false); };
+        rdr.readAsDataURL(file);
+      };
+      const sp = qs('#btnSaveProfile'); if (sp) sp.onclick = ()=>{ state.profile = state.profile||{}; state.profile.name = (nm&&nm.value)||''; toast('✔'); saveState(); renderProfileShowcase(); };
+      renderProfileShowcase();
 
     }
 
