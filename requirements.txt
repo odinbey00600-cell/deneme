@@ -1,0 +1,17 @@
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.1
+gymnasium==0.29.1
+torch==2.4.0
+python-dotenv==1.0.1
+pydantic==2.8.2
+pydantic-settings==2.4.0
+TA-Lib==0.4.32
+websockets==12.0
+binance-futures-connector==4.0.0
+tenacity==8.5.0
+orjson==3.10.7
+apscheduler==3.10.4
+loguru==0.7.2
+python-telegram-bot==21.4
+scipy==1.14.0
