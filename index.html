@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evrimsel AI Trading Bot Kontrol Merkezi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="status-edge" id="edgeGlow"></div>
+    <header class="topbar">
+      <div>
+        <h1>Evrimsel AI Trading Bot Kontrol Merkezi</h1>
+        <p>Binance Futures Testnet • Paper Trading Only • TradingView estetiği</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="pill live">Canlı Veri: Simüle Ediliyor</span>
+        <span class="pill safe">Mod: Paper Trading</span>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel market-panel">
+        <h2>Piyasa Verileri</h2>
+        <div class="symbol-grid" id="symbolCards"></div>
+
+        <div class="card depth-card">
+          <h3>Order Book Derinliği</h3>
+          <div class="depth-bars">
+            <div class="depth-side asks" id="asksBars"></div>
+            <div class="depth-side bids" id="bidsBars"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Funding & Duyarlılık</h3>
+          <p>Funding kalan süre: <strong id="fundingCountdown">--:--:--</strong></p>
+          <p>Long/Short oranı: <strong id="longShortRatio">1.02</strong></p>
+          <p>Likidasyon Heatmap</p>
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+
+        <div class="card">
+          <h3>Zaman Dilimi</h3>
+          <div class="timeframes">
+            <button class="time-btn active">1m</button>
+            <button class="time-btn">5m</button>
+            <button class="time-btn">15m</button>
+            <button class="time-btn">1h</button>
+            <button class="time-btn">4h</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel center-panel">
+        <h2>Bot Kontrol Merkezi</h2>
+        <div class="bot-tabs" id="botTabs"></div>
+
+        <div class="card bot-summary" id="botSummary"></div>
+
+        <div class="action-row">
+          <button class="btn btn-start">🟢 Aktif Et</button>
+          <button class="btn btn-stop">🔴 Durdur</button>
+          <button class="btn btn-panic" id="panicBtn">⚡ Acil Kapat</button>
+        </div>
+
+        <div class="card explanation-card">
+          <h3>Geri Bildirim Döngüsü</h3>
+          <p id="decisionExplain"></p>
+          <div class="feedback-actions">
+            <button class="btn ghost">👍 Mantıklı Karar</button>
+            <button class="btn ghost">🧠 Yanlış Karar, Öğret</button>
+            <button class="btn ghost">✋ Manuel Override</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel analysis-panel">
+        <h2>AI Öğrenme & Analiz</h2>
+
+        <div class="card">
+          <h3>Karar Ağacı (Son İşlem)</h3>
+          <ul class="tree">
+            <li>Trend: 15m EMA Ribbon bullish</li>
+            <li>RSI(1m): 28 (aşırı satım)</li>
+            <li>Funding > 0.1%: short bias</li>
+            <li><strong>Sonuç: Kontrollü LONG + sıkı SL</strong></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Bot Karşılaştırması</h3>
+          <ul class="performance-list">
+            <li>Bot-1: -$100 (Likidasyon) ❌</li>
+            <li>Bot-2: +$45 (Başarılı) ✅</li>
+            <li>Bot-3: Aktif (Öğreniyor...) 🔄</li>
+          </ul>
+          <p class="muted">Bot-2, Bot-1'in hatasından öğrendi: <strong>SL zorunlu.</strong></p>
+        </div>
+
+        <div class="card">
+          <h3>Risk Yönetimi Durumu</h3>
+          <div class="risk-grid">
+            <p>Kayıp eşiği: %20 → <strong>50x sınırlayıcı hazır</strong></p>
+            <p>Günlük limit: -$30 → <strong>Durum: -$8.2</strong></p>
+            <p>ATR bazlı boyut: <strong>0.58x</strong></p>
+            <p>Sakin Mod: <strong class="blue">Aktif</strong></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="bottom-panels">
+      <article class="card">
+        <h3>Evrimsel Bot Mimarisi</h3>
+        <p>Bot battığında yeni jenerasyon otomatik doğar, başarılı DNA mutasyona uğratılır.</p>
+        <pre id="dnaPreview"></pre>
+      </article>
+
+      <article class="card">
+        <h3>AI Strateji Motoru</h3>
+        <p>RSI • MACD • Bollinger • EMA Ribbon • Volume Profile • LSTM/Transformer confidence</p>
+        <div class="mode-list">
+          <span>İzleme Modu</span>
+          <span>Hızlı Test (30 gün)</span>
+          <span>Yarış Modu</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Güvenlik ve Entegrasyon</h3>
+        <ul>
+          <li>API anahtarı localStorage'da plain text tutulmaz (örnek: Web Crypto + token kasası)</li>
+          <li>IP kısıtlama uyarısı + 2FA kritik işlemler</li>
+          <li>Binance Testnet: <code>testnet.binance.vision</code></li>
+          <li>WebSocket örneği: <code>wss://stream.binancefuture.com/ws/btcusdt@markPrice</code></li>
+        </ul>
+      </article>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
