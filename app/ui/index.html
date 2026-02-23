@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Paper Trading Learning Lab</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #0f172a; color: #e2e8f0; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { background: #1e293b; border-radius: 8px; padding: 12px; }
+    button { margin-right: 8px; padding: 8px 10px; }
+    table { width: 100%; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h2>Institutional-Grade Self-Learning Paper Trading System</h2>
+  <div>
+    <button onclick="post('/api/pause')">Pause</button>
+    <button onclick="post('/api/resume')">Resume</button>
+    <button onclick="post('/api/kill')">Kill Bot</button>
+    <button onclick="post('/api/reset-learning')">Reset Learning</button>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>Live View</h3><pre id="live"></pre></div>
+    <div class="card"><h3>Risk / Margin</h3><pre id="risk"></pre></div>
+    <div class="card"><h3>Learning Memory</h3><pre id="memory"></pre></div>
+  </div>
+  <div class="card">
+    <h3>Explainability Panel (Recent Events)</h3>
+    <pre id="events"></pre>
+  </div>
+<script>
+async function post(url){ await fetch(url,{method:'POST'}); }
+async function tick(){
+  const d = await (await fetch('/api/state')).json();
+  const b = d.active_bot;
+  document.getElementById('live').textContent = JSON.stringify({
+    status: b.status,
+    generation: b.generation,
+    equity: b.equity,
+    balance: b.balance,
+    drawdown: b.drawdown,
+    positions: b.positions,
+    liquidation_price: b.liquidation_price,
+    feed_connected: d.feed_connected,
+  }, null, 2);
+  document.getElementById('risk').textContent = JSON.stringify({
+    global_stop: d.global_stop,
+    paused: d.paused,
+    dead_bots: d.dead_bots,
+    unrealized_pnl: b.unrealized_pnl,
+    leverage: b.leverage,
+  }, null, 2);
+  document.getElementById('memory').textContent = JSON.stringify(d.memory, null, 2);
+  document.getElementById('events').textContent = JSON.stringify(d.events.slice(-20), null, 2);
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>
