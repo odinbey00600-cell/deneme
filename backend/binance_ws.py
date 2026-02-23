@@ -28,7 +28,7 @@ class BinanceStream:
                         data = msg.get("data", {})
                         et = data.get("e")
                         event_ms = data.get("E", int(recv_ts * 1000))
-                        self.market.ws_latency_ms = recv_ts * 1000 - event_ms
+                        self.market.ws_latency_ms = max(0.0, (recv_ts - (event_ms / 1000)) * 1000)
                         self.market.heartbeat_ts = recv_ts
 
                         if et == "kline":

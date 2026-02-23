@@ -57,8 +57,14 @@ class Simulator:
         p = self.state.position
         if p.side == 0:
             return 1.0
-        liq = LiquidationEngine.liquidation_price(p.entry, p.qty, self.state.balance, p.side)
-        return (self.market.mark_price - liq) / self.market.mark_price if p.side > 0 else (liq - self.market.mark_price) / self.market.mark_price
+        liq = LiquidationEngine.liquidation_price(
+            p.entry, p.qty, max(self.state.balance, 1e-6), p.side
+        )
+        if p.side > 0:
+            dist = (self.market.mark_price - liq) / self.market.mark_price
+        else:
+            dist = (liq - self.market.mark_price) / self.market.mark_price
+        return max(0.0, dist)
 
     def _build_state(self) -> list[float]:
         close = self.market.close_price or self.market.mark_price or 1
@@ -95,6 +101,7 @@ class Simulator:
         px, fee, _ = await self.exec_engine.execute_price(self.market.mark_price, "SELL" if p.side > 0 else "BUY")
         pnl = (px - p.entry) * p.qty * p.side
         self.state.balance += pnl - fee
+        self.state.balance = max(0.0, self.state.balance)
         self.state.realized_pnl += pnl
         await self.db.execute(
             "INSERT INTO trades(ts,generation_id,side,qty,price,fee,pnl) VALUES(?,?,?,?,?,?,?)",
@@ -108,6 +115,7 @@ class Simulator:
             return
         payment = p.qty * self.market.mark_price * self.market.funding_rate * p.side
         self.state.balance -= payment
+        self.state.balance = max(0.0, self.state.balance)
 
     async def _liquidate(self):
         self.state.liquidations += 1
@@ -150,6 +158,15 @@ class Simulator:
                 return
 
         eq = self._equity()
+        # ---- HARD EQUITY FLOOR ----
+        if eq <= 0:
+            self.agent.remember(st, action, -100.0)
+            self.state.balance = 0.0
+            self.state.position = Position()
+            await self._liquidate()
+            await self.db.commit()
+            return
+        # ----------------------------
         self.state.max_equity = max(self.state.max_equity, eq)
         dd = 0.0 if self.state.max_equity == 0 else (self.state.max_equity - eq) / self.state.max_equity
         reward = (eq - settings.initial_balance) - (dd * 5) - (0.001 if action != "HOLD" else 0)
